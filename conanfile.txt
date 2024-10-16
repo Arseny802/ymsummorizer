@@ -1,0 +1,12 @@
+[requires]
+pugixml/1.14
+nlohmann_json/3.11.3
+spdlog/1.11.0
+gtest/1.13.0
+
+[generators]
+CMakeDeps
+CMakeToolchain
+
+[layout]
+cmake_layout
