@@ -1,3 +1,4 @@
+#pragma once
 #include "track.h"
 #include <memory>
 #include <string>

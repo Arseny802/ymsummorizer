@@ -1,6 +1,8 @@
+#pragma once
 #include "playlist_track.h"
 #include <memory>
 #include <string>
+#include <vector>
 
 namespace ymsummorizer::ymapi {
 

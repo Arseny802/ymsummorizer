@@ -1,7 +1,9 @@
+#pragma once
 #include "album.h"
 #include "artist.h"
 #include <memory>
 #include <string>
+#include <vector>
 
 namespace ymsummorizer::ymapi {
 

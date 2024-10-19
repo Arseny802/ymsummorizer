@@ -33,9 +33,9 @@ if (CMAKE_COMPILER_IS_GNUCXX)
   message(STATUS "GCC detected, adding compile flags")
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra")
   set(CMAKE_CXX_FLAGS " ${CMAKE_CXX_FLAGS} -fPIC")
-  set(CMAKE_CXX_IMPLICIT_LINK_LIBRARIES "")
-  set(CMAKE_CXX_IMPLICIT_LINK_DIRECTORIES "")
-  set(CMAKE_CXX_COMPILER_WORKS 1)
+  #set(CMAKE_CXX_IMPLICIT_LINK_LIBRARIES "")
+  #set(CMAKE_CXX_IMPLICIT_LINK_DIRECTORIES "")
+  #set(CMAKE_CXX_COMPILER_WORKS 1)
   #add_compile_options("-lstdc++11")
 elseif (MSVC) # building on visual c++
   message(STATUS "MSVC detected, adding compile flags")
@@ -44,15 +44,15 @@ elseif (MSVC) # building on visual c++
   ADD_DEFINITIONS("/EHsc")
 endif (CMAKE_COMPILER_IS_GNUCXX)
 
-
-include(FetchContent)
-FetchContent_Declare(cpr GIT_REPOSITORY https://github.com/libcpr/cpr.git
-                         GIT_TAG 1.11.0)
-FetchContent_MakeAvailable(cpr)
+#set(CMAKE_NO_SYSTEM_FROM_IMPORTED ON)
+set(CPR_USE_SYSTEM_CURL ON)
 
 enable_testing()
 
 add_subdirectory(deps)
-
+add_subdirectory(common)
+#add_subdirectory(storage)
 add_subdirectory(ymapi)
+add_subdirectory(tgbot)
+add_subdirectory(service)
 

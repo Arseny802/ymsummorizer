@@ -1,6 +1,8 @@
 cmake_minimum_required(VERSION 3.23)
-project(ymapi VERSION 0.0.1)
+project(ymsummorizer.ymapi VERSION 0.0.1)
 
+find_package(ZLIB)
+find_package(CURL)
 #find_package(cpr CONFIG REQUIRED)
 find_package(pugixml CONFIG REQUIRED)
 find_package(nlohmann_json CONFIG REQUIRED)
@@ -8,13 +10,16 @@ find_package(nlohmann_json CONFIG REQUIRED)
 add_library(${PROJECT_NAME} STATIC
   src/client.cpp
   src/playlist.cpp
-  src/pch.h
-  src/pch.cpp)
+  src/pch.cpp
+)
 
 target_precompile_headers(${PROJECT_NAME}
   PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/src/pch.h)
 
 target_link_libraries(${PROJECT_NAME} PUBLIC
+  ymsummorizer.common
+  ZLIB::ZLIB
+  CURL::libcurl
   cpr::cpr
   pugixml::pugixml
   nlohmann_json::nlohmann_json

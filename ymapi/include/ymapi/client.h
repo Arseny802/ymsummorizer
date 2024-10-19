@@ -1,3 +1,4 @@
+#pragma once
 #include "playlist.h"
 #include <string>
 #include <vector>

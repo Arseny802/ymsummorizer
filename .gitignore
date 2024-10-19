@@ -3,6 +3,8 @@ bin
 cmake_build
 CMakeUserPresets.json
 
+config.json
+
 # Prerequisites
 *.d
 
