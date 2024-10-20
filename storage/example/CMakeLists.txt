@@ -2,6 +2,7 @@ cmake_minimum_required(VERSION 3.23)
 project(ymsummorizer.storage.example VERSION 0.0.1)
 
 add_executable(${PROJECT_NAME}
+  src/hare_storage_example.cpp
   src/main.cpp
   src/pch.cpp
 )

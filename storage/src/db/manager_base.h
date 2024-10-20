@@ -17,26 +17,26 @@ public:
     virtual std::optional<std::vector<common::setting>> get_stored_settings() = 0;
     virtual bool set_stored_setting(const common::setting& setting) = 0;
 
-    /// source_types (data reciever types)
-    virtual std::optional<std::vector<common::source_type>> get_source_types() = 0;
+    virtual std::vector<common::user> get_stored_users() = 0;
+    virtual std::vector<common::group> get_stored_groups() = 0;
 
-    /// sources (data URLs)
-    virtual bool get_info_source(common::source& info_source) = 0;
-    virtual std::optional<std::vector<common::source>> get_info_sources() = 0;
-    virtual bool set_info_source(const common::source& info_source) = 0;
+    virtual bool add_user(const common::user& user) = 0;
+    virtual bool add_group(const common::group& group) = 0;
 
-    /// articles (concrete data)
-    virtual bool get_article(common::article& article) = 0;
-    virtual std::optional<std::vector<common::article>> get_articles(size_t limit = 100) = 0;
-    virtual std::optional<std::vector<common::article>> get_articles(int timestamp_begin) = 0;
-    virtual std::optional<std::vector<common::article>> get_articles(int timestamp_begin, int timestamp_end) = 0;
-    virtual std::optional<std::vector<common::article>> get_articles_by_source(int source_id, size_t limit = 100) = 0;
-    virtual std::optional<std::vector<common::article>> get_articles_by_source(int source_id, int timestamp_begin) = 0;
-    virtual std::optional<std::vector<common::article>> get_articles_by_source(int source_id,
-                                                                               int timestamp_begin,
-                                                                               int timestamp_end) = 0;
-    virtual bool set_article(const common::article& article) = 0;
-    virtual bool set_articles(const std::vector<common::article>& articles) = 0;
+    virtual bool remove_user(const std::string& user_id) = 0;
+    virtual bool remove_group(const std::string& group_id) = 0;
+
+    virtual bool update_user(const common::user& user) = 0;
+    virtual bool update_group(const common::group& group) = 0;
+
+    virtual std::vector<std::string> get_admin_ids() = 0;
+    virtual std::vector<std::string> get_superadmin_ids() = 0;
+
+    virtual bool add_admin(const common::user& user) = 0;
+    virtual bool add_superadmin(const common::group& group) = 0;
+
+    virtual bool remove_admin(const std::string& user_id) = 0;
+    virtual bool remove_superadmin(const std::string& group_id) = 0;
 
 protected:
     std::string get_sql_file(const std::string& file_name) const;

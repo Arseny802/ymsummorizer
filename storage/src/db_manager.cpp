@@ -2,7 +2,7 @@
 #include "storage/db_manager.h"
 #include "db/fabric.h"
 
-namespace gazeta::storage {
+namespace ymsummorizer::storage {
 
   db_manager::db_manager(storage_types storage_type, std::string db_name):
       storage_type_(storage_type),
@@ -81,113 +81,66 @@ namespace gazeta::storage {
     return manager_pimpl->set_stored_setting(setting);
   }
 
-  /// source_types (data reciever types)
-  std::vector<common::source_type> db_manager::get_source_types() {
+  std::vector<common::user> db_manager::get_stored_users() {
     AUTOLOG_ST
-    auto sources = manager_pimpl->get_source_types();
-    if (!sources.has_value()) {
-      log()->error("Get source types failed!");
-      return {};
-    }
-    return sources.value();
+    return manager_pimpl->get_stored_users();
+  }
+  std::vector<common::group> db_manager::get_stored_groups() {
+    AUTOLOG_ST
+    return manager_pimpl->get_stored_groups();
   }
 
-  /// sources (data URLs)
-  bool db_manager::get_info_source(common::source& info_source) {
+  bool db_manager::add_user(const common::user& user) {
     AUTOLOG_ST
-    return manager_pimpl->get_info_source(info_source);
+    return manager_pimpl->add_user(user);
+  }
+  bool db_manager::add_group(const common::group& group) {
+    AUTOLOG_ST
+    return manager_pimpl->add_group(group);
   }
 
-  std::vector<common::source> db_manager::get_info_sources() {
+  bool db_manager::remove_user(const std::string& user_id) {
     AUTOLOG_ST
-    auto info_sources = manager_pimpl->get_info_sources();
-    if (!info_sources.has_value()) {
-      log()->error("Get info sources failed!");
-      return {};
-    }
-    return info_sources.value();
+    return manager_pimpl->remove_user(user_id);
+  }
+  bool db_manager::remove_group(const std::string& group_id) {
+    AUTOLOG_ST
+    return manager_pimpl->remove_group(group_id);
   }
 
-  bool db_manager::set_info_source(const common::source& info_source) {
+  bool db_manager::update_user(const common::user& user) {
     AUTOLOG_ST
-    return manager_pimpl->set_info_source(info_source);
+    return manager_pimpl->update_user(user);
+  }
+  bool db_manager::update_group(const common::group& group) {
+    AUTOLOG_ST
+    return manager_pimpl->update_group(group);
   }
 
-  /// articles (concrete data)
-  bool db_manager::get_article(common::article& article) {
+  std::vector<std::string> db_manager::get_admin_ids() {
     AUTOLOG_ST
-    return manager_pimpl->get_article(article);
+    return manager_pimpl->get_admin_ids();
+  }
+  std::vector<std::string> db_manager::get_superadmin_ids() {
+    AUTOLOG_ST
+    return manager_pimpl->get_superadmin_ids();
   }
 
-  std::vector<common::article> db_manager::get_articles(size_t limit) {
+  bool db_manager::add_admin(const common::user& user) {
     AUTOLOG_ST
-    auto articles = manager_pimpl->get_articles(limit);
-    if (!articles.has_value()) {
-      log()->error("Get articles failed!");
-      return {};
-    }
-    return articles.value();
+    return manager_pimpl->add_admin(user);
+  }
+  bool db_manager::add_superadmin(const common::group& group) {
+    AUTOLOG_ST
+    return manager_pimpl->add_superadmin(group);
   }
 
-  std::vector<common::article> db_manager::get_articles(int timestamp_begin) {
+  bool db_manager::remove_admin(const std::string& user_id) {
     AUTOLOG_ST
-    auto articles = manager_pimpl->get_articles(timestamp_begin);
-    if (!articles.has_value()) {
-      log()->error("Get articles failed!");
-      return {};
-    }
-    return articles.value();
+    return manager_pimpl->remove_admin(user_id);
   }
-
-  std::vector<common::article> db_manager::get_articles(int timestamp_begin, int timestamp_end) {
+  bool db_manager::remove_superadmin(const std::string& group_id) {
     AUTOLOG_ST
-    auto articles = manager_pimpl->get_articles(timestamp_begin, timestamp_end);
-    if (!articles.has_value()) {
-      log()->error("Get articles failed!");
-      return {};
-    }
-    return articles.value();
+    return manager_pimpl->remove_superadmin(group_id);
   }
-
-  std::vector<common::article> db_manager::get_articles_by_source(int source_id, size_t limit) {
-    AUTOLOG_ST
-    auto articles = manager_pimpl->get_articles_by_source(source_id, limit);
-    if (!articles.has_value()) {
-      log()->error("Get articles failed!");
-      return {};
-    }
-    return articles.value();
-  }
-
-  std::vector<common::article> db_manager::get_articles_by_source(int source_id, int timestamp_begin) {
-    AUTOLOG_ST
-    auto articles = manager_pimpl->get_articles_by_source(source_id, timestamp_begin);
-    if (!articles.has_value()) {
-      log()->error("Get articles failed!");
-      return {};
-    }
-    return articles.value();
-  }
-
-  std::vector<common::article> db_manager::get_articles_by_source(int source_id,
-                                                                  int timestamp_begin,
-                                                                  int timestamp_end) {
-    AUTOLOG_ST
-    auto articles = manager_pimpl->get_articles_by_source(source_id, timestamp_begin, timestamp_end);
-    if (!articles.has_value()) {
-      log()->error("Get articles failed!");
-      return {};
-    }
-    return articles.value();
-  }
-
-  bool db_manager::set_article(const common::article& article) {
-    AUTOLOG_ST
-    return manager_pimpl->set_article(article);
-  }
-
-  bool db_manager::set_articles(const std::vector<common::article>& articles) {
-    AUTOLOG_ST
-    return manager_pimpl->set_articles(articles);
-  }
-} // namespace gazeta::storage
+} // namespace ymsummorizer::storage

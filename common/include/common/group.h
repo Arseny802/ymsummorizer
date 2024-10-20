@@ -1,14 +1,13 @@
 #pragma once
 #include <string>
+#include <vector>
 
 namespace ymsummorizer::common {
 
-  struct user {
+  struct group {
     std::string id;
     std::string name;
-    std::string login_tg;
-    std::string login_yandex;
-    std::string token;
+    std::vector<std::string> user_ids;
 
     std::string format() const;
   };

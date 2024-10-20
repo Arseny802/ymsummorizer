@@ -1,15 +1,16 @@
 #include "pch.h"
 
-namespace ymsummorizer {
+namespace ymsummorizer::service {
 
-  void main() { }
+  void main() {
+    log()->debug("Starting...");
+  }
 
-} // namespace ymsummorizer
+} // namespace ymsummorizer::service
 
 int main() {
-  std::cout << "Hello, World!" << std::endl;
+  ymsummorizer::service::initialize_logging();
+  ymsummorizer::service::main();
 
-  ymsummorizer::main();
-
-  return 0;
+  return EXIT_SUCCESS;
 }

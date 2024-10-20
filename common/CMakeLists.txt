@@ -1,8 +1,12 @@
 cmake_minimum_required(VERSION 3.23)
 project(ymsummorizer.common VERSION 0.0.1)
 
+find_package(Boost REQUIRED)
+
 add_library(${PROJECT_NAME} STATIC
 
+  src/group.cpp
+  src/user.cpp
   src/pch.cpp
 )
 
@@ -20,6 +24,7 @@ endif()
 target_link_libraries(${PROJECT_NAME} PUBLIC
   hare
   ${OS_SPECIFIC_LIBS}
+  Boost::boost
 )
 
 target_include_directories(${PROJECT_NAME}

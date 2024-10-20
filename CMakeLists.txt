@@ -51,7 +51,7 @@ enable_testing()
 
 add_subdirectory(deps)
 add_subdirectory(common)
-#add_subdirectory(storage)
+add_subdirectory(storage)
 add_subdirectory(ymapi)
 add_subdirectory(tgbot)
 add_subdirectory(service)

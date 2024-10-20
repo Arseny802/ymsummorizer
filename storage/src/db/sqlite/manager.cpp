@@ -141,292 +141,80 @@ namespace ymsummorizer::storage::db::sqlite {
     return true;
   }
 
-  /// source_types (data reciever types)
-  std::optional<std::vector<common::source_type>> manager::get_source_types() {
+  std::vector<common::user> manager::get_stored_users() {
     AUTOLOG_ST
-    const char* sql_query = "SELECT `name` FROM `source_types`";
-    sqlite3_stmt* stmt = prapare_statement(sql_query);
-    if (!stmt || !execute_query(sql_query)) {
-      sqlite3_finalize(stmt);
-      return std::nullopt;
-    }
-
-    std::vector<common::source_type> result;
-    while (sqlite3_step(stmt) == SQLITE_ROW) {
-      common::source_type item;
-      item.name = (char*)sqlite3_column_text(stmt, 1);
-      result.emplace_back(item);
-    }
-
-    sqlite3_finalize(stmt);
-    return result;
+    log()->error("get_stored_users not implemented!");
+    return {};
+  }
+  std::vector<common::group> manager::get_stored_groups() {
+    AUTOLOG_ST
+    log()->error("get_stored_groups not implemented!");
+    return {};
   }
 
-  bool manager::get_info_source(common::source& info_source) {
+  bool manager::add_user(const common::user& user) {
     AUTOLOG_ST
-    const char* sql_query;
-    sqlite3_stmt* stmt;
-    if (info_source.id > 0) {
-      sql_query =
-          "SELECT `id`, `name`, `url`, `source_type_id`, `filter`, `filter_startes_with` FROM `source` WHERE `id`=?";
-      stmt = prapare_statement(sql_query, info_source.id);
-    } else if (!info_source.name.empty()) {
-      sql_query =
-          "SELECT `id`, `name`, `url`, `source_type_id`, `filter`, `filter_startes_with` FROM `source` WHERE `name`=?";
-      stmt = prapare_statement(sql_query, info_source.name);
-    } else if (!info_source.url.empty()) {
-      sql_query =
-          "SELECT `id`, `name`, `url`, `source_type_id`, `filter`, `filter_startes_with` FROM `source` WHERE `url`=?";
-      stmt = prapare_statement(sql_query, info_source.url);
-    } else {
-      return false;
-    }
-
-    if (!stmt || !execute_query(sql_query)) {
-      sqlite3_finalize(stmt);
-      return false;
-    }
-
-    info_source.id = sqlite3_column_int(stmt, 0);
-    info_source.name = (char*)sqlite3_column_text(stmt, 1);
-    info_source.url = (char*)sqlite3_column_text(stmt, 2);
-    info_source.source_type_id = sqlite3_column_int(stmt, 3);
-    info_source.filter = (char*)sqlite3_column_text(stmt, 4);
-
-    sqlite3_finalize(stmt);
-    return true;
+    log()->error("add_user not implemented!");
+    return false;
+  }
+  bool manager::add_group(const common::group& group) {
+    AUTOLOG_ST
+    log()->error("add_group not implemented!");
+    return false;
   }
 
-  std::optional<std::vector<common::source>> manager::get_info_sources() {
+  bool manager::remove_user(const std::string& user_id) {
     AUTOLOG_ST
-    const char* sql_query =
-        "SELECT `id`, `name`, `url`, `source_type_id`, `filter`, `filter_startes_with` FROM `source`";
-    sqlite3_stmt* stmt = prapare_statement(sql_query);
-
-    if (!stmt || !execute_query(sql_query)) {
-      sqlite3_finalize(stmt);
-      return std::nullopt;
-    }
-
-    std::vector<common::source> sources;
-    while (sqlite3_step(stmt) == SQLITE_ROW) {
-      common::source info_source;
-      info_source.id = sqlite3_column_int(stmt, 0);
-      info_source.name = (char*)sqlite3_column_text(stmt, 1);
-      info_source.url = (char*)sqlite3_column_text(stmt, 2);
-      info_source.source_type_id = sqlite3_column_int(stmt, 3);
-      info_source.filter = (char*)sqlite3_column_text(stmt, 4);
-      sources.emplace_back(info_source);
-    }
-
-    sqlite3_finalize(stmt);
-    return sources;
+    log()->error("remove_user not implemented!");
+    return false;
+  }
+  bool manager::remove_group(const std::string& group_id) {
+    AUTOLOG_ST
+    log()->error("remove_group not implemented!");
+    return false;
   }
 
-  bool manager::set_info_source(const common::source& info_source) {
+  bool manager::update_user(const common::user& user) {
     AUTOLOG_ST
-    const char* sql_query =
-        "INSERT INTO `source`(`name`, `url`, `source_type_id`, `filter`, `filter_startes_with`) VALUES (?,?,?,?,?)";
-    sqlite3_stmt* stmt = prapare_statement(sql_query,
-                                           info_source.name,
-                                           info_source.url,
-                                           info_source.source_type_id,
-                                           info_source.filter,
-                                           info_source.filter_startes_with);
-    if (!stmt || !execute_query(sql_query)) {
-      sqlite3_finalize(stmt);
-      return false;
-    }
-
-    sqlite3_finalize(stmt);
-    return true;
+    log()->error("update_user not implemented!");
+    return false;
+  }
+  bool manager::update_group(const common::group& group) {
+    AUTOLOG_ST
+    log()->error("update_group not implemented!");
+    return false;
   }
 
-  std::optional<std::vector<common::article>> manager::get_article_data(const char* sql_query, sqlite3_stmt* stmt) {
-    if (!stmt || !execute_query(sql_query)) {
-      sqlite3_finalize(stmt);
-      return std::nullopt;
-    }
-
-    std::vector<common::article> articles;
-    while (sqlite3_step(stmt) == SQLITE_ROW) {
-      common::article article;
-      article.id = sqlite3_column_int64(stmt, 0);
-      article.set_datetime((char*)sqlite3_column_text(stmt, 1));
-      article.text = (char*)sqlite3_column_text(stmt, 2);
-      article.source_id = sqlite3_column_int64(stmt, 3);
-      article.link = (char*)sqlite3_column_text(stmt, 4);
-      article.reply_to_id = sqlite3_column_int(stmt, 5);
-      article.images_attached = sqlite3_column_int(stmt, 6) > 0;
-
-      articles.emplace_back(article);
-    }
-
-    sqlite3_finalize(stmt);
-    for (auto& article: articles) {
-      if (!article.images_attached) {
-        continue;
-      }
-
-      const char* sql_query_image = "SELECT `data` FROM `articles` WHERE `article_id` = ?";
-      sqlite3_stmt* stmt_image = prapare_statement(sql_query_image, article.id);
-      if (!stmt || !execute_query(sql_query_image)) {
-        log()->warning("Failed to get article {} image data", article.id);
-        sqlite3_finalize(stmt_image);
-        continue;
-      }
-
-      common::article::image_t image;
-      // image.data = sqlite3_column_blob(stmt_image, 0);
-      article.images.emplace_back(image);
-      sqlite3_finalize(stmt);
-    }
-
-    return articles;
+  std::vector<std::string> manager::get_admin_ids() {
+    AUTOLOG_ST
+    log()->error("get_admin_ids not implemented!");
+    return {};
+  }
+  std::vector<std::string> manager::get_superadmin_ids() {
+    AUTOLOG_ST
+    log()->error("get_superadmin_ids not implemented!");
+    return {};
   }
 
-  bool manager::get_article(common::article& article) {
+  bool manager::add_admin(const common::user& user) {
     AUTOLOG_ST
-    const char* sql_query;
-    sqlite3_stmt* stmt;
-    if (article.id > 0 && article.source_id > 0) {
-      sql_query = "SELECT `id`, `datetime_occurrence`, `text`, `source_id`, `link`, `reply_to_id`, "
-                  "`images_attached` FROM `articles` WHERE `id` = ? AND `source_id` = ?";
-      stmt = prapare_statement(sql_query, article.id, article.source_id);
-    } else if (article.id > 0) {
-      sql_query = "SELECT `id`, `datetime_occurrence`, `text`, `source_id`, `link`, `reply_to_id`, "
-                  "`images_attached` FROM `articles` WHERE `id` =?";
-      stmt = prapare_statement(sql_query, article.id);
-    } else if (!article.link.empty()) {
-      sql_query = "SELECT `id`, `datetime_occurrence`, `text`, `source_id`, `link`, `reply_to_id`, "
-                  "`images_attached` FROM `articles` WHERE `link` =?";
-      stmt = prapare_statement(sql_query, article.link);
-    }
-
-    auto articles_lst = get_article_data(sql_query, stmt);
-    if (!articles_lst.has_value()) {
-      return false;
-    }
-
-    if (articles_lst.value().size() > 1) {
-      log()->warning("Multiple articles found for id, source_id and link: {}, {}, '{}'. Getting front.",
-                     article.id,
-                     article.source_id,
-                     article.link);
-    }
-
-    article.id = articles_lst->front().id;
-    article.datetime_occurred = articles_lst->front().datetime_occurred;
-    article.text = articles_lst->front().text;
-    article.source_id = articles_lst->front().source_id;
-    article.link = articles_lst->front().link;
-    article.reply_to_id = articles_lst->front().reply_to_id;
-    article.images_attached = articles_lst->front().images_attached;
-    article.images = articles_lst->front().images;
-
-    return true;
+    log()->error("add_admin not implemented!");
+    return false;
+  }
+  bool manager::add_superadmin(const common::group& group) {
+    AUTOLOG_ST
+    log()->error("add_superadmin not implemented!");
+    return false;
   }
 
-  std::optional<std::vector<common::article>> manager::get_articles(size_t limit) {
+  bool manager::remove_admin(const std::string& user_id) {
     AUTOLOG_ST
-    std::string sql_query =
-        fmt::format("SELECT `id`, `datetime_occurrence`, `text`, `source_id`, `link`, `reply_to_id`, "
-                    "`images_attached` FROM `articles` ORDER BY `datetime_occurrence` DESC LIMIT {};",
-                    limit);
-    sqlite3_stmt* stmt = prapare_statement(sql_query.c_str());
-
-    return get_article_data(sql_query.c_str(), stmt);
+    log()->error("remove_admin not implemented!");
+    return false;
   }
-
-  std::optional<std::vector<common::article>> manager::get_articles(int timestamp_begin) {
+  bool manager::remove_superadmin(const std::string& group_id) {
     AUTOLOG_ST
-    const char* sql_query =
-        "SELECT `id`, `datetime_occurrence`, `text`, `source_id`, `link`, `reply_to_id`, "
-        "`images_attached` FROM `articles` WHERE `datetime_occurrence` > ? ORDER BY `datetime_occurrence` DESC";
-    sqlite3_stmt* stmt = prapare_statement(sql_query, timestamp_begin);
-    return get_article_data(sql_query, stmt);
-  }
-
-  std::optional<std::vector<common::article>> manager::get_articles(int timestamp_begin, int timestamp_end) {
-    AUTOLOG_ST
-    const char* sql_query = "SELECT `id`, `datetime_occurrence`, `text`, `source_id`, `link`, `reply_to_id`, "
-                            "`images_attached` FROM `articles` WHERE `datetime_occurrence` > ? AND "
-                            "`datetime_occurrence` <? ORDER BY `datetime_occurrence` DESC";
-    sqlite3_stmt* stmt = prapare_statement(sql_query, timestamp_begin, timestamp_end);
-    return get_article_data(sql_query, stmt);
-  }
-
-  std::optional<std::vector<common::article>> manager::get_articles_by_source(int source_id, size_t limit) {
-    AUTOLOG_ST
-    std::string sql_query = fmt::format(
-        "SELECT `id`, `datetime_occurrence`, `text`, `source_id`, `link`, `reply_to_id`, "
-        "`images_attached` FROM `articles` WHERE `source_id` = ? ORDER BY `datetime_occurrence` DESC LIMIT {}",
-        limit);
-    sqlite3_stmt* stmt = prapare_statement(sql_query.c_str(), source_id);
-    return get_article_data(sql_query.c_str(), stmt);
-  }
-
-  std::optional<std::vector<common::article>> manager::get_articles_by_source(int source_id, int timestamp_begin) {
-    AUTOLOG_ST
-    const char* sql_query = "SELECT `id`, `datetime_occurrence`, `text`, `source_id`, `link`, `reply_to_id`, "
-                            "`images_attached` FROM `articles` WHERE `source_id` = ? AND `datetime_occurrence` > ? "
-                            "ORDER BY `datetime_occurrence` DESC";
-    sqlite3_stmt* stmt = prapare_statement(sql_query, source_id, timestamp_begin);
-    return get_article_data(sql_query, stmt);
-  }
-
-  std::optional<std::vector<common::article>> manager::get_articles_by_source(int source_id,
-                                                                              int timestamp_begin,
-                                                                              int timestamp_end) {
-
-    AUTOLOG_ST
-    const char* sql_query = "SELECT `id`, `datetime_occurrence`, `text`, `source_id`, `link`, `reply_to_id`, "
-                            "`images_attached` FROM `articles` WHERE `source_id` = ? AND `datetime_occurrence` > ? AND "
-                            "`datetime_occurrence` <? ORDER BY `datetime_occurrence` DESC";
-    sqlite3_stmt* stmt = prapare_statement(sql_query, source_id, timestamp_begin, timestamp_end);
-    return get_article_data(sql_query, stmt);
-  }
-
-  bool manager::set_article(const common::article& article) {
-    AUTOLOG_ST
-    const char* sql_query =
-        "INSERT INTO `articles`(`id`, `datetime_occurrence`, `text`, `source_id`, `link`, `reply_to_id`, "
-        "`images_attached`) VALUES (?,?,?,?,?,?,?)";
-    sqlite3_stmt* stmt = prapare_statement(sql_query,
-                                           article.id,
-                                           article.get_datetime(),
-                                           article.text,
-                                           1, // article.source_id,
-                                           article.link,
-                                           article.reply_to_id,
-                                           article.images_attached);
-    if (!stmt || !execute_query(sql_query)) {
-      sqlite3_finalize(stmt);
-      return false;
-    }
-
-    int last_id = sqlite3_last_insert_rowid(db_handler_);
-    log()->debug("set_stored_setting succeed. id = {0}", last_id);
-
-    sqlite3_finalize(stmt);
-
-    for (const auto& image: article.images) {
-      const char* sql_query_images = "INSERT INTO `images`(`article_id`, `data`) VALUES (?,?)";
-      sqlite3_stmt* stmt_images = prapare_statement(sql_query_images, last_id, image.url);
-      if (!stmt_images || !execute_query(sql_query_images)) {
-        log()->error("Error occurred while uploading image for article {0}!", article.id);
-      }
-
-      sqlite3_finalize(stmt_images);
-    }
-    return true;
-  }
-
-  bool manager::set_articles(const std::vector<common::article>& articles) {
-    AUTOLOG_ST
-    for (const auto& article: articles) {
-      set_article(article);
-    }
-    return true;
+    log()->error("remove_superadmin not implemented!");
+    return false;
   }
 } // namespace ymsummorizer::storage::db::sqlite

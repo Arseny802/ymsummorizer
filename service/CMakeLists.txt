@@ -7,6 +7,7 @@ find_package(nlohmann_json CONFIG REQUIRED)
 
 add_executable(${PROJECT_NAME}
 
+  src/hare_service.cpp
   src/main.cpp
   src/pch.cpp
 )
@@ -16,6 +17,9 @@ target_precompile_headers(${PROJECT_NAME}
 
 target_link_libraries(${PROJECT_NAME} PUBLIC
   ymsummorizer.common
+  ymsummorizer.storage
+  ymsummorizer.tgbot
+  ymsummorizer.ymapi
 )
 
 target_include_directories(${PROJECT_NAME}

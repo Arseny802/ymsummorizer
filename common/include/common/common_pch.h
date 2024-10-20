@@ -15,6 +15,7 @@
 #include <exception>
 #include <format>
 #include <forward_list>
+#include <fstream>
 #include <functional>
 #include <future>
 #include <iostream>
@@ -42,3 +43,14 @@
 #include <utility>
 #include <variant>
 #include <vector>
+
+// external libraries
+#include "fmt/format.h"
+
+#include <boost/uuid/uuid.hpp>            // uuid class
+#include <boost/uuid/uuid_generators.hpp> // generators
+#include <boost/uuid/uuid_io.hpp>         // streaming operators etc.
+
+// Custom libraries
+#include "hare/config_custom.h"
+#include "hare/hare.hpp"

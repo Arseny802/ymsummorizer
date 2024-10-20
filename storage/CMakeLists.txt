@@ -13,6 +13,7 @@ cmrc_add_resource_library(${PROJECT_NAME}.resources
 
 add_library(${PROJECT_NAME} STATIC
   src/db/sqlite/manager.cpp
+  src/db/cfg/manager.cpp
   src/db/fabric.cpp
   src/db/manager_base.cpp
   src/db_manager.cpp
