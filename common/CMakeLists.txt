@@ -9,10 +9,17 @@ add_library(${PROJECT_NAME} STATIC
 target_precompile_headers(${PROJECT_NAME}
   PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/src/pch.h)
 
+set(OS_SPECIFIC_LIBS "")
+if (WIN32)
+  set(OS_SPECIFIC_LIBS
+    ws2_32
+    wsock32
+  )
+endif()
+
 target_link_libraries(${PROJECT_NAME} PUBLIC
   hare
-  ws2_32
-  wsock32
+  ${OS_SPECIFIC_LIBS}
 )
 
 target_include_directories(${PROJECT_NAME}
