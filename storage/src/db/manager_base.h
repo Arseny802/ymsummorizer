@@ -17,6 +17,10 @@ public:
     virtual std::optional<std::vector<common::setting>> get_stored_settings() = 0;
     virtual bool set_stored_setting(const common::setting& setting) = 0;
 
+    virtual std::optional<common::bot_info> get_bot_info() = 0;
+    virtual bool update_bot_info(const common::bot_info& bot_info) = 0;
+    virtual bool delete_bot_info() = 0;
+
     virtual std::vector<common::user> get_stored_users() = 0;
     virtual std::vector<common::group> get_stored_groups() = 0;
 

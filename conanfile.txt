@@ -18,4 +18,5 @@ CMakeToolchain
 cmake_layout
 
 [options]
+boost/*:without_stacktrace=True
 boost/*:without_test=True

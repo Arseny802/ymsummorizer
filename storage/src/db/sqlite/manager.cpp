@@ -141,6 +141,24 @@ namespace ymsummorizer::storage::db::sqlite {
     return true;
   }
 
+  std::optional<common::bot_info> manager::get_bot_info() {
+    AUTOLOG_ST
+    log()->error("get_stored_users not implemented!");
+    return std::nullopt;
+  }
+
+  bool manager::update_bot_info(const common::bot_info& bot_info) {
+    AUTOLOG_ST
+    log()->error("get_stored_users not implemented!");
+    return false;
+  }
+
+  bool manager::delete_bot_info() {
+    AUTOLOG_ST
+    log()->error("get_stored_users not implemented!");
+    return false;
+  }
+
   std::vector<common::user> manager::get_stored_users() {
     AUTOLOG_ST
     log()->error("get_stored_users not implemented!");

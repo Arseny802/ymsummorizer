@@ -90,6 +90,21 @@ namespace ymsummorizer::storage {
     return manager_pimpl->get_stored_groups();
   }
 
+  std::optional<common::bot_info> db_manager::get_bot_info() {
+    AUTOLOG_ST
+    return manager_pimpl->get_bot_info();
+  }
+
+  bool db_manager::update_bot_info(const common::bot_info& bot_info) {
+    AUTOLOG_ST
+    return manager_pimpl->update_bot_info(bot_info);
+  }
+
+  bool db_manager::delete_bot_info() {
+    AUTOLOG_ST
+    return manager_pimpl->delete_bot_info();
+  }
+
   bool db_manager::add_user(const common::user& user) {
     AUTOLOG_ST
     return manager_pimpl->add_user(user);

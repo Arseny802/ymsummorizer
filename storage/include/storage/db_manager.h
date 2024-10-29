@@ -1,5 +1,7 @@
 #pragma once
+#include <optional>
 #include <string>
+#include <vector>
 
 #include "common/common.hpp"
 #include "types.h"
@@ -20,6 +22,10 @@ public:
     std::string get_stored_setting(const std::string& key, std::string default_value = std::string());
     std::string get_stored_setting(common::setting& setting, std::string default_value = std::string());
     bool set_stored_setting(const common::setting& setting);
+
+    std::optional<common::bot_info> get_bot_info();
+    bool update_bot_info(const common::bot_info& bot_info);
+    bool delete_bot_info();
 
     std::vector<common::user> get_stored_users();
     std::vector<common::group> get_stored_groups();

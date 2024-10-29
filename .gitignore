@@ -1,9 +1,10 @@
-.vscode
 bin
 cmake_build
 CMakeUserPresets.json
 
 config.json
+
+.[vV][sS][cC]ode*
 
 # Prerequisites
 *.d

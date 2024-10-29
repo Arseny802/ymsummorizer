@@ -38,6 +38,11 @@ namespace ymsummorizer::storage::db::cfg {
     }
 
     try {
+      if (!data_->contains("bot_info")) {
+        (*data_)["bot_info"] = nlohmann::json::object();
+        (*data_)["bot_info"]["token"] = "INSERT_YOUR_BOT_TOKEN_HERE";
+      }
+
       if (!data_->contains("users")) {
         (*data_)["users"] = nlohmann::json::array();
       }
@@ -84,15 +89,24 @@ namespace ymsummorizer::storage::db::cfg {
         (*data_)["superadmins"].emplace_back((*data_)["users"][0]["id"]);
       }
 
-      // write prettified JSON to another file
-      std::ofstream result_cfg_file(cfg_file_path_);
-      result_cfg_file << std::setw(2) << *data_ << std::endl;
-      result_cfg_file.close();
+      save_data();
       return true;
     } catch (const std::exception& e) {
       log()->error("Error: {0}", e.what());
     }
     return false;
+  }
+  void manager::save_data() {
+    AUTOLOG_ST
+    if (!data_) {
+      log()->error("Data is empty!");
+      return;
+    }
+
+    // write prettified JSON to another file
+    std::ofstream result_cfg_file(cfg_file_path_);
+    result_cfg_file << std::setw(2) << *data_ << std::endl;
+    result_cfg_file.close();
   }
 
   bool manager::get_stored_setting(common::setting& setting) {
@@ -125,6 +139,49 @@ namespace ymsummorizer::storage::db::cfg {
     }
 
     return true;
+  }
+
+  std::optional<common::bot_info> manager::get_bot_info() {
+    AUTOLOG_ST
+    if (!data_ || !data_->contains("bot_info")) {
+      log()->error("Data is empty!");
+      return std::nullopt;
+    }
+
+    common::bot_info result;
+    result.token = (*data_)["bot_info"]["token"];
+    return result;
+  }
+
+  bool manager::update_bot_info(const common::bot_info& bot_info) {
+    AUTOLOG_ST
+    if (!data_) {
+      log()->error("Data is empty!");
+      return false;
+    }
+
+    if (!data_->contains("bot_info")) {
+      log()->warning("Bot info is empty!");
+      (*data_)["bot_info"] = nlohmann::json::object();
+    }
+
+    (*data_)["bot_info"]["token"] = bot_info.token;
+    save_data();
+
+    return true;
+  }
+
+  bool manager::delete_bot_info() {
+    AUTOLOG_ST
+    if (!data_) {
+      log()->error("Data is empty!");
+      return true;
+    }
+
+    data_->erase("bot_info");
+    save_data();
+
+    return false;
   }
 
   std::vector<common::user> manager::get_stored_users() {

@@ -18,6 +18,10 @@ public:
     std::optional<std::vector<common::setting>> get_stored_settings();
     bool set_stored_setting(const common::setting& setting);
 
+    std::optional<common::bot_info> get_bot_info();
+    bool update_bot_info(const common::bot_info& bot_info);
+    bool delete_bot_info();
+
     std::vector<common::user> get_stored_users();
     std::vector<common::group> get_stored_groups();
 
