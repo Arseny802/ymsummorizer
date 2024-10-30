@@ -29,7 +29,7 @@ jobs:
     - name: Conan install
       run: conan install -s build_type=${{env.BUILD_TYPE}} . --output-folder="${{github.workspace}}/cmake_build/lin_gcc_x64_rel" --name=lin_gcc_x64_rel -pr:h ${{github.workspace}}/build_tools/conan/.profiles/lin/lin_gcc_x64_rel -pr:b ${{github.workspace}}/build_tools/conan/.profiles/lin/lin_gcc_x64_rel --build=missing
 
-    - name: Set reusable strings
+    - name: Set cmake_toolchain_file_path
       id: strings
       shell: bash
       run: |
