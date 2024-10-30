@@ -27,7 +27,7 @@ jobs:
       run: git clone https://github.com/Arseny802/build_tools.git build_tools
 
     - name: Conan install
-      run: conan install -s build_type=${{env.BUILD_TYPE}} . --output-folder="cmake_build/lin_gcc_x64_rel" -pr:h build_tools/conan/.profiles/lin/lin_gcc_x64_rel -pr:b build_tools/conan/.profiles/lin/lin_gcc_x64_rel --name=lin_gcc_x64_rel
+      run: conan install -s build_type=${{env.BUILD_TYPE}} . --output-folder="cmake_build/lin_gcc_x64_rel" --name=lin_gcc_x64_rel -pr:h build_tools/conan/.profiles/lin/lin_gcc_x64_rel -pr:b build_tools/conan/.profiles/lin/lin_gcc_x64_rel --build=missing
 
     - name: Configure CMake
       # Configure CMake in a 'build' subdirectory. `CMAKE_BUILD_TYPE` is only required if you are using a single-configuration generator such as make.
