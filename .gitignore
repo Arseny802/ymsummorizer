@@ -2,6 +2,7 @@ bin
 cmake_build
 CMakeUserPresets.json
 
+ymsummorizer.storage.json
 config.json
 
 .[vV][sS][cC]ode*
