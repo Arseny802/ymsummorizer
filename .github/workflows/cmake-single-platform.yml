@@ -35,6 +35,9 @@ jobs:
       run: |
         cd ${{github.workspace}}/cmake_build/lin_gcc_x64_rel && echo "cmake_toolchain_file_path=`find ~+ -type f -name "conan_toolchain.cmake"`" >> "$GITHUB_OUTPUT"
 
+    - name: Git submodule update
+      run: git submodule update --init --recursive
+
     - name: Configure CMake
       run: cmake -B ${{github.workspace}}/cmake_build/lin_gcc_x64_rel -DBUILD_TOOL_TYPE_NAME=lin_gcc_x64_rel  -DCMAKE_TOOLCHAIN_FILE=${{ steps.strings.outputs.cmake_toolchain_file_path }} -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}}
 
