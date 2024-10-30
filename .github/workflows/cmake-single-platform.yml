@@ -24,10 +24,10 @@ jobs:
       run: echo "${{ steps.conan.outputs.version }}"
   
     - name: Download build tools
-      run: git clone https://github.com/Arseny802/build_tools.git build_tools
+      run: git clone https://github.com/Arseny802/build_tools.git ${{github.workspace}}/build_tools
 
     - name: Conan install
-      run: conan install -s build_type=${{env.BUILD_TYPE}} . --output-folder="cmake_build/lin_gcc_x64_rel" --name=lin_gcc_x64_rel -pr:h build_tools/conan/.profiles/lin/lin_gcc_x64_rel -pr:b build_tools/conan/.profiles/lin/lin_gcc_x64_rel --build=missing
+      run: conan install -s build_type=${{env.BUILD_TYPE}} . --output-folder="${{github.workspace}}/cmake_build/lin_gcc_x64_rel" --name=lin_gcc_x64_rel -pr:h ${{github.workspace}}/build_tools/conan/.profiles/lin/lin_gcc_x64_rel -pr:b ${{github.workspace}}/build_tools/conan/.profiles/lin/lin_gcc_x64_rel --build=missing
 
     - name: Configure CMake
       # Configure CMake in a 'build' subdirectory. `CMAKE_BUILD_TYPE` is only required if you are using a single-configuration generator such as make.
@@ -36,10 +36,10 @@ jobs:
 
     - name: Build
       # Build your program with the given configuration
-      run: cmake --build ${{github.workspace}}/build --config ${{env.BUILD_TYPE}}
+      run: cmake --build ${{github.workspace}}/cmake_build/lin_gcc_x64_rel --config ${{env.BUILD_TYPE}}
 
     - name: Test
-      working-directory: ${{github.workspace}}/build
+      working-directory: ${{github.workspace}}/cmake_build/lin_gcc_x64_rel
       # Execute tests defined by the CMake configuration.
       # See https://cmake.org/cmake/help/latest/manual/ctest.1.html for more detail
       run: ctest -C ${{env.BUILD_TYPE}}
