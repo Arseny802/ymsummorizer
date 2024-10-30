@@ -13,7 +13,6 @@
 #include <ctime>
 #include <deque>
 #include <exception>
-#include <format>
 #include <forward_list>
 #include <fstream>
 #include <functional>
@@ -44,9 +43,14 @@
 #include <variant>
 #include <vector>
 
-// external libraries
-#include "fmt/format.h"
+// std::format OR fmt::format
+#if __has_include(<format>)
+#  include <format>
+#else
+#  include <fmt/format.h>
+#endif
 
+// external libraries
 #include <boost/uuid/uuid.hpp>            // uuid class
 #include <boost/uuid/uuid_generators.hpp> // generators
 #include <boost/uuid/uuid_io.hpp>         // streaming operators etc.

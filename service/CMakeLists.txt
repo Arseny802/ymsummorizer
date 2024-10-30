@@ -6,7 +6,11 @@ find_package(pugixml CONFIG REQUIRED)
 find_package(nlohmann_json CONFIG REQUIRED)
 
 add_executable(${PROJECT_NAME}
-
+  src/handlers/group_playlist.cpp
+  src/handlers/group_user.cpp
+  src/handlers/group.cpp
+  src/handlers/user.cpp
+  src/bot_impl.cpp
   src/hare_service.cpp
   src/main.cpp
   src/pch.cpp

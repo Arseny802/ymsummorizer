@@ -16,6 +16,12 @@ public:
     db_manager(storage_types storage_type, std::string db_name);
     ~db_manager();
 
+    db_manager(const db_manager&) = delete;
+    db_manager& operator=(const db_manager&) = delete;
+
+    db_manager(db_manager&& other);
+    db_manager& operator=(db_manager&& other) = delete;
+
     bool connect();
 
     /// settings

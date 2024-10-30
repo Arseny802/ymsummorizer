@@ -10,9 +10,24 @@ namespace ymsummorizer::storage {
     AUTOLOG_ST;
   }
 
-  db_manager::~db_manager() {
+  db_manager::~db_manager(){AUTOLOG_ST}
+
+  db_manager::db_manager(db_manager&& other):
+      storage_type_(other.storage_type_),
+      db_name_(std::move(other.db_name_)) {
     AUTOLOG_ST
+    manager_pimpl = std::move(manager_pimpl);
+    // connected_ = std::exchange(connected_, false);
+    connected_.store(false, std::memory_order_release);
   }
+
+  /*db_manager& db_manager::operator=(db_manager&& other) {
+    AUTOLOG_ST
+    // storage_type_ = other.storage_type_;
+    // db_name_ = std::move(other.db_name_);
+    manager_pimpl = std::move(manager_pimpl);
+    connected_.store(std::exchange(connected_, false));
+  }*/
 
   bool db_manager::connect() {
     AUTOLOG_ST

@@ -1,0 +1,77 @@
+#include "pch.h"
+#include "bot_impl.h"
+
+#include "storage/db_manager.h"
+#include "tgbot/user_interaction.h"
+#include "tgbot/ymsummorizer_bot.h"
+#include "ymapi/client.h"
+
+namespace ymsummorizer::service {
+
+  bot_impl::bot_impl(storage::db_manager&& db):
+      db_(std::move(db)),
+      bot_(db_),
+      handlers::user(db_),
+      handlers::group(db_),
+      handlers::group_playlist(db_),
+      handlers::group_user(db_) {
+    AUTOLOG_STE
+
+    bot_.set_callback_command(tgbot::command_type::group_list,
+                              std::bind(&group::on_group_list, this, std::placeholders::_1));
+    bot_.set_callback_command(tgbot::command_type::group_create,
+                              std::bind(&group::on_group_create, this, std::placeholders::_1));
+    bot_.set_callback_command(tgbot::command_type::group_delete,
+                              std::bind(&group::on_group_delete, this, std::placeholders::_1));
+
+    bot_.set_callback_command(tgbot::command_type::group_user_add,
+                              std::bind(&group_user::on_group_user_add, this, std::placeholders::_1));
+    bot_.set_callback_command(tgbot::command_type::group_user_remove,
+                              std::bind(&group_user::on_group_user_remove, this, std::placeholders::_1));
+    bot_.set_callback_command(tgbot::command_type::group_leave,
+                              std::bind(&group_user::on_group_leave, this, std::placeholders::_1));
+
+    bot_.set_callback_command(tgbot::command_type::group_playslit_list,
+                              std::bind(&group_playlist::on_group_playslit_list, this, std::placeholders::_1));
+    bot_.set_callback_command(tgbot::command_type::group_playslit_view,
+                              std::bind(&group_playlist::on_group_playslit_view, this, std::placeholders::_1));
+    bot_.set_callback_command(tgbot::command_type::group_playslit_add,
+                              std::bind(&group_playlist::on_group_playslit_remove, this, std::placeholders::_1));
+    bot_.set_callback_command(tgbot::command_type::group_playslit_add,
+                              std::bind(&group_playlist::on_group_playslit_remove, this, std::placeholders::_1));
+
+    bot_.set_callback_command(tgbot::command_type::group_playslit_add,
+                              std::bind(&user::on_start, this, std::placeholders::_1));
+    bot_.set_callback_command(tgbot::command_type::group_playslit_add,
+                              std::bind(&user::on_user_token_add, this, std::placeholders::_1));
+    bot_.set_callback_command(tgbot::command_type::group_playslit_add,
+                              std::bind(&user::on_user_token_erase, this, std::placeholders::_1));
+    bot_.set_callback_command(tgbot::command_type::group_playslit_add,
+                              std::bind(&user::on_token_edit, this, std::placeholders::_1));
+    bot_.set_callback_command(tgbot::command_type::group_playslit_add,
+                              std::bind(&user::on_user_view, this, std::placeholders::_1));
+  }
+
+  bot_impl::~bot_impl() {
+    AUTOLOG_STE
+  }
+
+  void bot_impl::main() {
+    AUTOLOG_STE
+    log()->debug("Starting...");
+
+    if (!bot_.start()) {
+      log()->error("Failed to start bot");
+      return;
+    }
+
+    log()->info("Started");
+
+    constexpr size_t counter_step = 5;
+    size_t counter = 1;
+    while (true) {
+      std::this_thread::sleep_for(std::chrono::seconds(counter_step));
+      log()->debug("Already running for {} second(s).", (counter_step * counter++));
+    }
+  }
+} // namespace ymsummorizer::service
