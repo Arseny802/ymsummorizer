@@ -29,13 +29,16 @@ jobs:
     - name: Conan install
       run: conan install -s build_type=${{env.BUILD_TYPE}} . --output-folder="${{github.workspace}}/cmake_build/lin_gcc_x64_rel" --name=lin_gcc_x64_rel -pr:h ${{github.workspace}}/build_tools/conan/.profiles/lin/lin_gcc_x64_rel -pr:b ${{github.workspace}}/build_tools/conan/.profiles/lin/lin_gcc_x64_rel --build=missing
 
+    - name: Set reusable strings
+      id: strings
+      shell: bash
+      run: |
+        cd ${{github.workspace}}/cmake_build/lin_gcc_x64_rel && echo "cmake_toolchain_file_path=`find ~+ -type f -name "conan_toolchain.cmake"`" >> "$GITHUB_OUTPUT"
+
     - name: Configure CMake
-      # Configure CMake in a 'build' subdirectory. `CMAKE_BUILD_TYPE` is only required if you are using a single-configuration generator such as make.
-      # See https://cmake.org/cmake/help/latest/variable/CMAKE_BUILD_TYPE.html?highlight=cmake_build_type
-      run: cmake -B ${{github.workspace}}/cmake_build/lin_gcc_x64_rel -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}}
+      run: cmake -B ${{github.workspace}}/cmake_build/lin_gcc_x64_rel -DBUILD_TOOL_TYPE_NAME=lin_gcc_x64_rel  -DCMAKE_TOOLCHAIN_FILE=${{ steps.strings.outputs.cmake_toolchain_file_path }} -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}}
 
     - name: Build
-      # Build your program with the given configuration
       run: cmake --build ${{github.workspace}}/cmake_build/lin_gcc_x64_rel --config ${{env.BUILD_TYPE}}
 
     - name: Test
