@@ -53,9 +53,7 @@ private:
     void init_commands();
 
     template<command_type CT>
-    ymsummorizer_callback_result::ptr run_command_callback(const TgBot::Message::Ptr& message,
-                                                           bool use_text = false,
-                                                           bool use_answer = false);
+    ymsummorizer_callback_result::ptr run_command_callback(const user_interaction& ui);
 
     storage::db_manager& get_db() const noexcept override;
 
@@ -65,7 +63,9 @@ private:
 
     std::unordered_map<command_type, std::function<ymsummorizer_callback_result::ptr(const user_interaction&)>>
         callback_commands_;
-    std::map<std::string, std::function<void(const TgBot::Message::Ptr& message)>> user_command_queue_;
+    // std::map<std::string, std::function<void(const TgBot::Message::Ptr& message)>> user_command_queue_;
+    using callback_queue = std::queue<std::function<bool(const TgBot::Message::Ptr& message)>>;
+    std::map<std::string, callback_queue> user_command_queue_;
   };
 
 } // namespace ymsummorizer::tgbot

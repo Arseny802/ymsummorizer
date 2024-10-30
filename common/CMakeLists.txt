@@ -6,6 +6,7 @@ find_package(Boost REQUIRED)
 add_library(${PROJECT_NAME} STATIC
 
   src/group.cpp
+  src/playlist.cpp
   src/user.cpp
   src/pch.cpp
 )

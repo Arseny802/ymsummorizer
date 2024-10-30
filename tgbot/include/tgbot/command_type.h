@@ -7,12 +7,12 @@ namespace ymsummorizer::tgbot {
   /// * start,
   /// * user_token_add,
   /// * user_token_erase,
-  /// * user_view,
   /// * group_list,
   /// * group_leave,
   /// * group_playslit_list,
   /// * group_playslit_view
   /// Команды администратора группы:
+  /// * user_view,
   /// * group_user_add,
   /// * group_user_remove,
   /// * group_playslit_add,
@@ -32,6 +32,10 @@ namespace ymsummorizer::tgbot {
     /// @brief Удаление токена пользователя из БД.
     /// Должно выкинуть его из групп?
     user_token_erase,
+    /// @brief Изменение токена пользователя в БД.
+    /// Аргумент - команда: переписать, удалить.
+    /// Аргумент - токен Яндекса, если переписать.
+    token_edit,
     /// @brief Посмотреть информацию о пользователе.
     /// Аргумент - логин ТГ.
     user_view,

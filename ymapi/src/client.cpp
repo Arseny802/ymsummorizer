@@ -34,22 +34,28 @@ namespace ymsummorizer::ymapi {
   }
 
   playlist_ptr setup_playlist(nlohmann::json result) {
-    playlist_ptr current_playlist;
+    playlist_ptr current_playlist = std::make_shared<playlist>();
 
     current_playlist->title = result["title"];
     current_playlist->playlistUuid = result["playlistUuid"];
-    current_playlist->description = result["description"];
+    if (result.contains("description")) {
+      current_playlist->description = result["description"];
+    }
     current_playlist->available = result["available"];
     current_playlist->kind = result["kind"];
     current_playlist->uid = result["uid"];
     current_playlist->revision = result["revision"];
     current_playlist->snapshot = result["snapshot"];
     current_playlist->trackCount = result["trackCount"];
-    current_playlist->visibility = result["visibility"] == "public";
-    current_playlist->created = result["created"];   // todo
-    current_playlist->modified = result["modified"]; // todo
-    current_playlist->durationMs = result["durationMs"];
-    current_playlist->likesCount = result["likesCount"];
+    current_playlist->visibility = (result["visibility"] == "public");
+    // current_playlist->created = result["created"];   // todo
+    // current_playlist->modified = result["modified"]; // todo
+    if (result.contains("durationMs")) {
+      current_playlist->durationMs = result["durationMs"];
+    }
+    if (result.contains("likesCount")) {
+      current_playlist->likesCount = result["likesCount"];
+    }
 
     nlohmann::json owner = result["owner"];
     current_playlist->owner.uid = owner["uid"];

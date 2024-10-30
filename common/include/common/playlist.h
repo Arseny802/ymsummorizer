@@ -5,10 +5,10 @@
 
 namespace ymsummorizer::common {
 
-  struct group {
+  struct playlist {
     std::string id;
     std::string name;
-    std::vector<std::string> user_ids;
+    std::string group_id;
 
     std::string format() const;
 

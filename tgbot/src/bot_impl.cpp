@@ -97,7 +97,11 @@ namespace ymsummorizer::tgbot {
       return;
     }
 
-    ymsummorizer_callback_result::ptr result = run_command_callback<command_type::group_list>(message, true);
+    user_interaction ui;
+    ui.user_login_tg = message->from->username;
+    ui.timestamp = message->date;
+
+    ymsummorizer_callback_result::ptr result = run_command_callback<command_type::group_list>(ui);
     if (result->ok) {
       group_list_callback_result::ptr group_list = dynamic_pointer_cast<group_list_callback_result>(result);
       if (group_list == nullptr) {
@@ -189,8 +193,64 @@ namespace ymsummorizer::tgbot {
       return;
     }
 
-    // TODO(Arseny802): implement bot_impl::on_group_playslit_add
-    bot_.getApi().sendMessage(message->chat->id, "Я пока такое не поддерживаю...");
+    if (user_command_queue_.contains(message->from->username)) {
+      log()->warning("User {} is already in queue.", message->from->username);
+      bot_.getApi().sendMessage(message->chat->id, "Предыдущий запрос отклонён.");
+      user_command_queue_.erase(message->from->username);
+    }
+
+    // Shared object to pass to callback in final state
+    user_interaction::ptr prolonged_interaction = std::make_shared<user_interaction>();
+    prolonged_interaction->user_login_tg = message->from->username;
+    prolonged_interaction->timestamp = message->date;
+
+    bot_.getApi().sendMessage(message->chat->id, "Введите название группы:");
+    user_command_queue_.emplace(message->from->username, callback_queue());
+    user_command_queue_[message->from->username].emplace([this, prolonged_interaction](TgBot::Message::Ptr message) {
+      const auto group_name = message->text;
+      if (!common::group::is_valid_name(group_name)) {
+        bot_.getApi().sendMessage(
+            message->chat->id,
+            "Название группы не подходит :(\n Попробуйте ещё раз вызвать команду с новым названием.");
+        return false;
+      }
+
+      log()->info(
+          "group_playslit_add - stage 1. User '{}' passed group_name '{}'.", message->from->username, group_name);
+      prolonged_interaction->arguments[user_interaction::key_group_name] = std::move(group_name);
+
+      bot_.getApi().sendMessage(message->chat->id, "Введите название плейлиста:");
+      return true;
+    });
+
+    user_command_queue_[message->from->username].emplace([this, prolonged_interaction](TgBot::Message::Ptr message) {
+      std::string playlist_name = message->text;
+      if (!common::playlist::is_valid_name(playlist_name)) {
+        bot_.getApi().sendMessage(
+            message->chat->id,
+            "Название плейлиста не подходит :(\n Попробуйте ещё раз вызвать команду с новым названием.");
+        return false;
+      }
+
+      log()->info(
+          "group_playslit_add - stage 2. User '{}' passed playlist_name '{}'.", message->from->username, playlist_name);
+      prolonged_interaction->arguments[user_interaction::key_playlist_name] = std::move(playlist_name);
+
+      ymsummorizer_callback_result::ptr result =
+          run_command_callback<command_type::group_playslit_add>(*prolonged_interaction);
+      if (result->ok) {
+        bot_.getApi().sendMessage(message->chat->id,
+                                  fmt::format("Плейлист '{}' добавлен в группу '{}'.",
+                                              prolonged_interaction->arguments[user_interaction::key_playlist_name],
+                                              prolonged_interaction->arguments[user_interaction::key_group_name]));
+      } else {
+        bot_.getApi().sendMessage(message->chat->id,
+                                  fmt::format("Не удалось добавить плейлист '{}' в группу '{}'.",
+                                              prolonged_interaction->arguments[user_interaction::key_playlist_name],
+                                              prolonged_interaction->arguments[user_interaction::key_group_name]));
+      }
+      return true;
+    });
   }
 
   void bot_impl::on_group_playslit_remove(TgBot::Message::Ptr message) {
@@ -216,14 +276,22 @@ namespace ymsummorizer::tgbot {
     }
 
     bot_.getApi().sendMessage(message->chat->id, "Введите название группы:");
-    user_command_queue_.emplace(message->from->username, [this](TgBot::Message::Ptr message) {
+    user_command_queue_.emplace(message->from->username, callback_queue());
+    user_command_queue_[message->from->username].emplace([this](TgBot::Message::Ptr message) {
       log()->info("User wrote group_create: '{}'.", message->text.c_str());
-      ymsummorizer_callback_result::ptr result = run_command_callback<command_type::group_create>(message, true);
+
+      user_interaction ui;
+      ui.user_login_tg = message->from->username;
+      ui.timestamp = message->date;
+      ui.arguments[user_interaction::key_group_name] = message->text;
+      ymsummorizer_callback_result::ptr result = run_command_callback<command_type::group_create>(ui);
       if (result->ok) {
         bot_.getApi().sendMessage(message->chat->id, fmt::format("Группа '{}' создана.", message->text));
       } else {
         bot_.getApi().sendMessage(message->chat->id, fmt::format("Не удалось создать группу '{}'.", message->text));
       }
+
+      return true;
     });
   }
 
@@ -240,52 +308,54 @@ namespace ymsummorizer::tgbot {
     }
 
     bot_.getApi().sendMessage(message->chat->id, "Введите название группы:");
-    user_command_queue_.emplace(message->from->username, [this](TgBot::Message::Ptr message) {
+    user_command_queue_.emplace(message->from->username, callback_queue());
+    user_command_queue_[message->from->username].emplace([this](TgBot::Message::Ptr message) {
       log()->info("User wrote group_delete: '{}'.", message->text.c_str());
-      ymsummorizer_callback_result::ptr result = run_command_callback<command_type::group_delete>(message, true);
+
+      user_interaction ui;
+      ui.user_login_tg = message->from->username;
+      ui.timestamp = message->date;
+      ui.arguments[user_interaction::key_group_name] = message->text;
+      ymsummorizer_callback_result::ptr result = run_command_callback<command_type::group_delete>(ui);
       if (result->ok) {
         bot_.getApi().sendMessage(message->chat->id, fmt::format("Группа '{}' удалена.", message->text));
       } else {
         bot_.getApi().sendMessage(message->chat->id, fmt::format("Не удалось удалить группу '{}'.", message->text));
       }
+
+      return true;
     });
   }
 
   void bot_impl::on_non_command_message(TgBot::Message::Ptr message) {
     AUTOMEASURE_TG
+
     auto command_iter = user_command_queue_.find(message->from->username);
     if (command_iter != user_command_queue_.end()) {
       log()->info("User {} wrote '{}'. Passing to user_command_queue_", message->from->username, message->text);
-      command_iter->second(message);
-      user_command_queue_.erase(command_iter);
+      auto& cmd = command_iter->second.front();
+      if (!cmd(message)) {
+        user_command_queue_.erase(command_iter);
+        log()->warning("Command failed. User {} command queue is empty.", message->from->username);
+        return;
+      }
+
+      command_iter->second.pop();
+      if (command_iter->second.empty()) {
+        user_command_queue_.erase(command_iter);
+        log()->info("User {} command queue is empty.", message->from->username);
+      }
     } else {
+      // No commands found in queue -> we can't handle this message
       log()->info("User {} wrote '{}'.", message->from->username, message->text);
       bot_.getApi().sendMessage(message->chat->id, "Я не умею в обычные диалоги. Попробуйте воспользоваться командой.");
     }
   }
 
   template<command_type CT>
-  ymsummorizer_callback_result::ptr bot_impl::run_command_callback(const TgBot::Message::Ptr& message,
-                                                                   bool use_text,
-                                                                   bool use_answer) {
-    // AUTOLOG_TG
+  ymsummorizer_callback_result::ptr bot_impl::run_command_callback(const user_interaction& ui) {
+    AUTOLOG_TG
     if (callback_commands_.contains(CT)) {
-      user_interaction ui;
-      ui.user_login_tg = message->from->username;
-      ui.timestamp = message->date;
-
-      if (use_text) {
-        ui.message = message->text;
-      }
-
-      if (use_answer) {
-        if (message->poll->options.empty()) {
-          ui.poll_answer_success = std::nullopt;
-        } else {
-          ui.poll_answer_success = message->poll->options[0]->voterCount == 1;
-        }
-      }
-
       return callback_commands_[CT](ui);
     } else {
       log()->critical("Callback for command {} not found", static_cast<std::underlying_type_t<command_type>>(CT));
