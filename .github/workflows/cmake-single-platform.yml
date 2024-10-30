@@ -24,7 +24,7 @@ jobs:
       run: echo "${{ steps.conan.outputs.version }}"
   
     - name: Download build tools
-      run: git clone https://github.com/Arseny802/build_tools/tree/master build_tools
+      run: git clone https://github.com/Arseny802/build_tools.git build_tools
 
     - name: Conan install
       run: |
