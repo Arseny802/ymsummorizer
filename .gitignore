@@ -6,6 +6,7 @@ ymsummorizer.storage.json
 config.json
 
 .[vV][sS][cC]ode*
+CMakeLists.txt.user
 
 # Prerequisites
 *.d

@@ -1,12 +1,30 @@
 #include "pch.h"
 #include "ymapi/client.h"
 
-#include <format>
-
 #include <cpr/cpr.h>
 #include <nlohmann/json.hpp>
 
 namespace ymsummorizer::ymapi {
+
+  /**
+   * Format a string using a given format string and arguments.
+   *
+   * If the `std::format` header is available, this function will use it.
+   * Otherwise, it will use the fmt library.
+   *
+   * @param fmt_str The format string.
+   * @param args The arguments to pass to the format function.
+   *
+   * @return The formatted string.
+   */
+  template<typename... Args>
+  inline std::string format(const char fmt_str[], Args&&... args) {
+#ifdef __cpp_lib_format
+    return std::vformat(fmt_str, std::make_format_args(args...));
+#else
+    return fmt::vformat(fmt_str, fmt::make_format_args(args...));
+#endif
+  }
 
   struct invocation_info {
     std::string request_id;
@@ -122,7 +140,7 @@ namespace ymsummorizer::ymapi {
   cpr::Header get_base_headers(std::string user_id, std::string token) {
     return {
         {"X-Yandex-Music-Client", user_id},
-        {"Authorization", std::format("OAuth {}", token)},
+        {"Authorization", format("OAuth {}", token)},
         {"Content-Type", "application/json"},
         {"accept", "application/json"},
     };
@@ -136,7 +154,7 @@ namespace ymsummorizer::ymapi {
   }
 
   std::vector<playlist_ptr> client::playlist_list(std::string user_id) {
-    cpr::Url Url{std::format("{}/users/{}/playlists/list", host, (user_id.empty() ? user_id_ : user_id))};
+    cpr::Url Url(format("{}/users/{}/playlists/list", host.c_str(), (user_id.empty() ? user_id_ : user_id).c_str()));
     cpr::Parameters parameters;
 
     cpr::Response response = cpr::Get(Url, parameters, get_base_headers(user_id_, token_));
@@ -163,7 +181,7 @@ namespace ymsummorizer::ymapi {
   }
 
   playlist_ptr client::playlist_get_info(int kind, std::string user_id) {
-    cpr::Url Url{std::format("{}/users/{}/playlists/{}", host, (user_id.empty() ? user_id_ : user_id), kind)};
+    cpr::Url Url(format("{}/users/{}/playlists/{}", host, (user_id.empty() ? user_id_ : user_id), kind));
     cpr::Parameters parameters;
 
     cpr::Response response = cpr::Get(Url, parameters, get_base_headers(user_id_, token_));
@@ -180,7 +198,7 @@ namespace ymsummorizer::ymapi {
   }
 
   playlist_ptr client::playlist_create(const std::string& playlist_name, bool visibility) {
-    cpr::Url Url{std::format("{}/users/{}/playlists/create", host, user_id_)};
+    cpr::Url Url(format("{}/users/{}/playlists/create", host, user_id_));
     cpr::Parameters parameters{{"title", playlist_name}, {"visibility", (visibility ? "public" : "private")}};
 
     cpr::Response response = cpr::Post(Url, parameters, get_base_headers(user_id_, token_));
@@ -197,7 +215,7 @@ namespace ymsummorizer::ymapi {
   }
 
   bool client::playlist_delete(int kind) {
-    cpr::Url Url{std::format("{}/users/{}/playlists/{}/delete", host, user_id_, kind)};
+    cpr::Url Url(format("{}/users/{}/playlists/{}/delete", host, user_id_, kind));
     cpr::Parameters parameters;
 
     cpr::Response response = cpr::Post(Url, parameters, get_base_headers(user_id_, token_));
@@ -216,7 +234,7 @@ namespace ymsummorizer::ymapi {
   }
 
   playlist_ptr client::playlist_visibility(int kind, bool visibility) {
-    cpr::Url Url{std::format("{}/users/{}/playlists/{}/visibility", host, user_id_, kind)};
+    cpr::Url Url(format("{}/users/{}/playlists/{}/visibility", host, user_id_, kind));
     cpr::Parameters parameters{{"visibility", (visibility ? "public" : "private")}};
 
     cpr::Response response = cpr::Post(Url, parameters, get_base_headers(user_id_, token_));
@@ -233,7 +251,7 @@ namespace ymsummorizer::ymapi {
   }
 
   bool client::playlist_track_insert(playlist_ptr playlist, uint64_t track_id) {
-    cpr::Url Url{std::format("{}/users/{}/playlists/{}/change-relative", host, user_id_, playlist->kind)};
+    cpr::Url Url(format("{}/users/{}/playlists/{}/change-relative", host, user_id_, playlist->kind));
 
     nlohmann::json json;
     json["op"] = "insert";
@@ -256,7 +274,7 @@ namespace ymsummorizer::ymapi {
   }
 
   bool client::playlist_track_delete(playlist_ptr playlist, uint64_t track_id, uint64_t position) {
-    cpr::Url Url{std::format("{}/users/{}/playlists/{}/change-relative", host, user_id_, playlist->kind)};
+    cpr::Url Url(format("{}/users/{}/playlists/{}/change-relative", host, user_id_, playlist->kind));
 
     nlohmann::json json;
     json["op"] = "delete";
