@@ -3,6 +3,8 @@
 #include "storage/db_manager.h"
 #include "user_interaction.h"
 #include "ymsummorizer_callback_result.h"
+
+#include <functional>
 #include <memory>
 
 namespace ymsummorizer::tgbot {

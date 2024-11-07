@@ -6,7 +6,12 @@ find_package(pugixml CONFIG REQUIRED)
 find_package(nlohmann_json CONFIG REQUIRED)
 
 add_library(${PROJECT_NAME} STATIC
+  src/handlers/group_playlist.cpp
+  src/handlers/group_user.cpp
+  src/handlers/group.cpp
+  src/handlers/user.cpp
   src/helpers/user_autorization.cpp
+  src/helpers/usrcmd_callbck_cache.cpp
   src/bot_impl.cpp
   src/ymsummorizer_bot.cpp
   src/hare_tgbot.cpp

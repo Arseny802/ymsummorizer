@@ -9,12 +9,12 @@
 namespace ymsummorizer::service {
 
   bot_impl::bot_impl(storage::db_manager&& db):
-      db_(std::move(db)),
-      bot_(db_),
       handlers::user(db_),
       handlers::group(db_),
       handlers::group_playlist(db_),
-      handlers::group_user(db_) {
+      handlers::group_user(db_),
+      db_(std::move(db)),
+      bot_(db_) {
     AUTOLOG_STE
 
     bot_.set_callback_command(tgbot::command_type::group_list,
@@ -36,19 +36,19 @@ namespace ymsummorizer::service {
     bot_.set_callback_command(tgbot::command_type::group_playslit_view,
                               std::bind(&group_playlist::on_group_playslit_view, this, std::placeholders::_1));
     bot_.set_callback_command(tgbot::command_type::group_playslit_add,
-                              std::bind(&group_playlist::on_group_playslit_remove, this, std::placeholders::_1));
-    bot_.set_callback_command(tgbot::command_type::group_playslit_add,
+                              std::bind(&group_playlist::on_group_playslit_add, this, std::placeholders::_1));
+    bot_.set_callback_command(tgbot::command_type::group_playslit_remove,
                               std::bind(&group_playlist::on_group_playslit_remove, this, std::placeholders::_1));
 
     bot_.set_callback_command(tgbot::command_type::group_playslit_add,
                               std::bind(&user::on_start, this, std::placeholders::_1));
-    bot_.set_callback_command(tgbot::command_type::group_playslit_add,
+    bot_.set_callback_command(tgbot::command_type::user_token_add,
                               std::bind(&user::on_user_token_add, this, std::placeholders::_1));
-    bot_.set_callback_command(tgbot::command_type::group_playslit_add,
+    bot_.set_callback_command(tgbot::command_type::user_token_erase,
                               std::bind(&user::on_user_token_erase, this, std::placeholders::_1));
-    bot_.set_callback_command(tgbot::command_type::group_playslit_add,
-                              std::bind(&user::on_token_edit, this, std::placeholders::_1));
-    bot_.set_callback_command(tgbot::command_type::group_playslit_add,
+    // bot_.set_callback_command(tgbot::command_type::token_edit,
+    //                           std::bind(&user::on_token_edit, this, std::placeholders::_1));
+    bot_.set_callback_command(tgbot::command_type::user_view,
                               std::bind(&user::on_user_view, this, std::placeholders::_1));
   }
 

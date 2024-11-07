@@ -12,6 +12,7 @@ namespace ymsummorizer::tgbot::helpers {
 public:
     // user_autorization(std::string token, storage::db_manager& db);
     user_autorization();
+    //user_autorization(storage::db_manager& db);
     virtual ~user_autorization();
 
     user_autorization(const user_autorization&) = delete;
@@ -25,9 +26,8 @@ protected:
     template<command_type CT>
     bool validate_user_command(TgBot::Message::Ptr message);
 
-    virtual storage::db_manager& get_db() const noexcept = 0;
-
 private:
+    //storage::db_manager& db_;
   };
 
   template<>

@@ -22,7 +22,7 @@ namespace ymsummorizer::tgbot {
   /// * group_delete,
   /// Команды суперадминистратора:
   /// * access_edit
-  enum class command_type {
+  enum command_type {
     /// @brief Добавление пользователя в БД
     /// (берём его имя, фамилию, логин из сообщения в ТГ и запоминаем)
     start,
@@ -83,4 +83,6 @@ namespace ymsummorizer::tgbot {
     /// Аргумент - маска прав доступа.
     // access_edit
   };
+
+  constexpr size_t command_type_count = sizeof(command_type) / sizeof(std::underlying_type_t<command_type>);
 } // namespace ymsummorizer::tgbot
