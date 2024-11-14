@@ -1,4 +1,5 @@
 [requires]
+magic_enum/0.9.6
 boost/1.84.0
 sqlite3/3.46.0
 pugixml/1.14

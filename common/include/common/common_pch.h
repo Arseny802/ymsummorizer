@@ -47,7 +47,9 @@
 #if __has_include(<format>)
 #  include <format>
 #else
+#  include <fmt/core.h>
 #  include <fmt/format.h>
+#  include <fmt/ranges.h>
 #endif
 
 // external libraries

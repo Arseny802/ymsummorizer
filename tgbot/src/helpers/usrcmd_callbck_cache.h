@@ -4,11 +4,12 @@
 #include "tgbot/user_interaction.h"
 #include "tgbot/ymsummorizer_callback_result.h"
 
+#include <magic_enum.hpp>
+
 #include <map>
 #include <memory>
 #include <queue>
 
-// #include <tgbot/tgbot.h>
 #include <tgbot/types/Message.h>
 
 namespace ymsummorizer::tgbot::helpers {
@@ -30,7 +31,7 @@ public:
     void command_queue_emplace_next(const std::string& chat_id, user_cmd&& cmd);
     bool try_handle_command(TgBot::Message::Ptr message);
 
-    std::array<callback_cmd, command_type_count> callback_commands;
+    std::array<callback_cmd, magic_enum::enum_count<command_type>()> callback_commands;
 
 private:
     std::map<std::string, callback_queue> user_command_queue_;

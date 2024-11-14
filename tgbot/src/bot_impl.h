@@ -8,6 +8,7 @@
 #include "handlers/group_playlist.h"
 #include "handlers/group_user.h"
 #include "handlers/user.h"
+#include "helpers/handler_context.h"
 #include "helpers/user_autorization.h"
 #include "helpers/usrcmd_callbck_cache.h"
 
@@ -17,10 +18,10 @@
 
 namespace ymsummorizer::tgbot {
 
-  class bot_impl final: public handlers::user<bot_impl>,
-                        public handlers::group<bot_impl>,
-                        public handlers::group_playlist<bot_impl>,
-                        public handlers::group_user<bot_impl> {
+  class bot_impl final: public handlers::user,
+                        public handlers::group,
+                        public handlers::group_playlist,
+                        public handlers::group_user {
 public:
     using callback_cmd = std::function<ymsummorizer_callback_result::ptr(const user_interaction&)>;
 
@@ -39,46 +40,16 @@ public:
     bool send_message(const std::string& chat_id, const std::string& text);
     void set_callback_command(command_type ct, callback_cmd&& callback);
 
-    TgBot::Bot& get_bot() { return bot_; }
-    storage::db_manager& get_db() { return db_; }
-    helpers::usrcmd_callbck_cache& get_callbck_cache() { return usrcmd_callbck_cache_; }
-
 private:
-    void on_start(TgBot::Message::Ptr message);
-    void on_user_view(TgBot::Message::Ptr message);
-    void on_user_token_add(TgBot::Message::Ptr message);
-    void on_user_token_erase(TgBot::Message::Ptr message);
-
-    void on_group_list(TgBot::Message::Ptr message);
-    void on_group_leave(TgBot::Message::Ptr message);
-    void on_group_playslit_list(TgBot::Message::Ptr message);
-    void on_group_playslit_view(TgBot::Message::Ptr message);
-
-    void on_group_user_add(TgBot::Message::Ptr message);
-    void on_group_user_remove(TgBot::Message::Ptr message);
-    void on_group_playslit_add(TgBot::Message::Ptr message);
-    void on_group_playslit_remove(TgBot::Message::Ptr message);
-
-    void on_group_create(TgBot::Message::Ptr message);
-    void on_group_delete(TgBot::Message::Ptr message);
-
     void on_non_command_message(TgBot::Message::Ptr message);
+    void on_unknown_command(TgBot::Message::Ptr message);
 
     void init_commands();
 
-    template<command_type CT>
-    ymsummorizer_callback_result::ptr run_command_callback(const user_interaction& ui);
-
+    std::atomic_bool is_running_ = false;
     std::string token_;
     TgBot::Bot bot_;
     storage::db_manager& db_;
-
-    std::unordered_map<command_type, callback_cmd> callback_commands_;
-
-    // std::map<std::string, std::function<void(const TgBot::Message::Ptr& message)>> user_command_queue_;
-    using callback_queue = std::queue<std::function<bool(const TgBot::Message::Ptr& message)>>;
-    std::map<std::string, callback_queue> user_command_queue_;
-
     helpers::usrcmd_callbck_cache usrcmd_callbck_cache_;
   };
 

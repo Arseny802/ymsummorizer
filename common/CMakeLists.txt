@@ -1,6 +1,7 @@
 cmake_minimum_required(VERSION 3.23)
 project(ymsummorizer.common VERSION 0.0.1)
 
+find_package(magic_enum REQUIRED)
 find_package(Boost REQUIRED)
 
 add_library(${PROJECT_NAME} STATIC
@@ -25,6 +26,7 @@ endif()
 target_link_libraries(${PROJECT_NAME} PUBLIC
   hare
   ${OS_SPECIFIC_LIBS}
+  magic_enum::magic_enum
   Boost::boost
 )
 

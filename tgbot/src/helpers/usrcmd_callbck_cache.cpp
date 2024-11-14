@@ -9,31 +9,33 @@ namespace ymsummorizer::tgbot::helpers {
   }
 
   usrcmd_callbck_cache::usrcmd_callbck_cache() {
-    for (size_t i = 0; i < command_type_count; i++) {
+    for (size_t i = 0; i < callback_commands.size(); i++) {
       callback_commands[i] = &callback_stub;
     }
   }
   usrcmd_callbck_cache::~usrcmd_callbck_cache() = default;
 
-    bool usrcmd_callbck_cache::command_queue_contains(const std::string& chat_id) const { 
-      return user_command_queue_.contains(chat_id); }
+  bool usrcmd_callbck_cache::command_queue_contains(const std::string& chat_id) const {
+    return user_command_queue_.contains(chat_id);
+  }
 
-    bool usrcmd_callbck_cache::command_queue_erase(const std::string& chat_id) { 
-      return user_command_queue_.erase(chat_id); }
+  bool usrcmd_callbck_cache::command_queue_erase(const std::string& chat_id) {
+    return user_command_queue_.erase(chat_id);
+  }
 
-    bool usrcmd_callbck_cache::command_queue_clear(const std::string& chat_id) { 
-      bool res = command_queue_contains(chat_id);
-      command_queue_emplace(chat_id);
-      return res; 
-      }
+  bool usrcmd_callbck_cache::command_queue_clear(const std::string& chat_id) {
+    bool res = command_queue_contains(chat_id);
+    command_queue_emplace(chat_id);
+    return res;
+  }
 
-    void usrcmd_callbck_cache::command_queue_emplace(const std::string& chat_id) { 
-      user_command_queue_[chat_id] = std::queue<user_cmd>();
-    }
+  void usrcmd_callbck_cache::command_queue_emplace(const std::string& chat_id) {
+    user_command_queue_[chat_id] = std::queue<user_cmd>();
+  }
 
-    void usrcmd_callbck_cache::command_queue_emplace_next(const std::string& chat_id, user_cmd&& cmd) { 
-      user_command_queue_[chat_id].emplace(cmd);
-    }
+  void usrcmd_callbck_cache::command_queue_emplace_next(const std::string& chat_id, user_cmd&& cmd) {
+    user_command_queue_[chat_id].emplace(cmd);
+  }
 
   bool usrcmd_callbck_cache::try_handle_command(TgBot::Message::Ptr message) {
     AUTOMEASURE_TG

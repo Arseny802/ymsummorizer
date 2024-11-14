@@ -9,7 +9,7 @@ namespace ymsummorizer::tgbot::helpers {
   user_autorization::user_autorization() = default;
   user_autorization::~user_autorization() = default;
 
-  bool user_autorization::validate_user(TgBot::Message::Ptr message) {
+  bool user_autorization::validate_user(const helpers::handler_context& context, TgBot::Message::Ptr message) {
     AUTOMEASURE_TG
     if (message->from->isBot) {
       log()->info("User {} is a bot\n", message->from->username.c_str());
@@ -36,9 +36,10 @@ namespace ymsummorizer::tgbot::helpers {
   }
 
   template<>
-  bool user_autorization::validate_user_command<command_type::start>(TgBot::Message::Ptr message) {
+  bool user_autorization::validate_user_command<command_type::start>(const helpers::handler_context& context,
+                                                                     TgBot::Message::Ptr message) {
     AUTOMEASURE_TG
-    if (!validate_user(message)) {
+    if (!validate_user(context, message)) {
       return false;
     }
 
@@ -46,9 +47,10 @@ namespace ymsummorizer::tgbot::helpers {
   }
 
   template<>
-  bool user_autorization::validate_user_command<command_type::user_token_add>(TgBot::Message::Ptr message) {
+  bool user_autorization::validate_user_command<command_type::user_token_add>(const helpers::handler_context& context,
+                                                                              TgBot::Message::Ptr message) {
     AUTOMEASURE_TG
-    if (!validate_user(message)) {
+    if (!validate_user(context, message)) {
       return false;
     }
 
@@ -56,9 +58,10 @@ namespace ymsummorizer::tgbot::helpers {
   }
 
   template<>
-  bool user_autorization::validate_user_command<command_type::user_token_erase>(TgBot::Message::Ptr message) {
+  bool user_autorization::validate_user_command<command_type::user_token_erase>(const helpers::handler_context& context,
+                                                                                TgBot::Message::Ptr message) {
     AUTOMEASURE_TG
-    if (!validate_user(message)) {
+    if (!validate_user(context, message)) {
       return false;
     }
 
@@ -66,9 +69,10 @@ namespace ymsummorizer::tgbot::helpers {
   }
 
   template<>
-  bool user_autorization::validate_user_command<command_type::user_view>(TgBot::Message::Ptr message) {
+  bool user_autorization::validate_user_command<command_type::user_view>(const helpers::handler_context& context,
+                                                                         TgBot::Message::Ptr message) {
     AUTOMEASURE_TG
-    if (!validate_user(message)) {
+    if (!validate_user(context, message)) {
       return false;
     }
 
@@ -76,9 +80,10 @@ namespace ymsummorizer::tgbot::helpers {
   }
 
   template<>
-  bool user_autorization::validate_user_command<command_type::group_list>(TgBot::Message::Ptr message) {
+  bool user_autorization::validate_user_command<command_type::group_list>(const helpers::handler_context& context,
+                                                                          TgBot::Message::Ptr message) {
     AUTOMEASURE_TG
-    if (!validate_user(message)) {
+    if (!validate_user(context, message)) {
       return false;
     }
 
@@ -86,9 +91,10 @@ namespace ymsummorizer::tgbot::helpers {
   }
 
   template<>
-  bool user_autorization::validate_user_command<command_type::group_create>(TgBot::Message::Ptr message) {
+  bool user_autorization::validate_user_command<command_type::group_create>(const helpers::handler_context& context,
+                                                                            TgBot::Message::Ptr message) {
     AUTOMEASURE_TG
-    if (!validate_user(message)) {
+    if (!validate_user(context, message)) {
       return false;
     }
 
@@ -96,9 +102,10 @@ namespace ymsummorizer::tgbot::helpers {
   }
 
   template<>
-  bool user_autorization::validate_user_command<command_type::group_delete>(TgBot::Message::Ptr message) {
+  bool user_autorization::validate_user_command<command_type::group_delete>(const helpers::handler_context& context,
+                                                                            TgBot::Message::Ptr message) {
     AUTOMEASURE_TG
-    if (!validate_user(message)) {
+    if (!validate_user(context, message)) {
       return false;
     }
 
@@ -106,9 +113,10 @@ namespace ymsummorizer::tgbot::helpers {
   }
 
   template<>
-  bool user_autorization::validate_user_command<command_type::group_user_add>(TgBot::Message::Ptr message) {
+  bool user_autorization::validate_user_command<command_type::group_user_add>(const helpers::handler_context& context,
+                                                                              TgBot::Message::Ptr message) {
     AUTOMEASURE_TG
-    if (!validate_user(message)) {
+    if (!validate_user(context, message)) {
       return false;
     }
 
@@ -116,9 +124,11 @@ namespace ymsummorizer::tgbot::helpers {
   }
 
   template<>
-  bool user_autorization::validate_user_command<command_type::group_user_remove>(TgBot::Message::Ptr message) {
+  bool user_autorization::validate_user_command<command_type::group_user_remove>(
+      const helpers::handler_context& context,
+      TgBot::Message::Ptr message) {
     AUTOMEASURE_TG
-    if (!validate_user(message)) {
+    if (!validate_user(context, message)) {
       return false;
     }
 
@@ -126,9 +136,10 @@ namespace ymsummorizer::tgbot::helpers {
   }
 
   template<>
-  bool user_autorization::validate_user_command<command_type::group_leave>(TgBot::Message::Ptr message) {
+  bool user_autorization::validate_user_command<command_type::group_leave>(const helpers::handler_context& context,
+                                                                           TgBot::Message::Ptr message) {
     AUTOMEASURE_TG
-    if (!validate_user(message)) {
+    if (!validate_user(context, message)) {
       return false;
     }
 
@@ -136,9 +147,11 @@ namespace ymsummorizer::tgbot::helpers {
   }
 
   template<>
-  bool user_autorization::validate_user_command<command_type::group_playslit_list>(TgBot::Message::Ptr message) {
+  bool user_autorization::validate_user_command<command_type::group_playslit_list>(
+      const helpers::handler_context& context,
+      TgBot::Message::Ptr message) {
     AUTOMEASURE_TG
-    if (!validate_user(message)) {
+    if (!validate_user(context, message)) {
       return false;
     }
 
@@ -146,9 +159,11 @@ namespace ymsummorizer::tgbot::helpers {
   }
 
   template<>
-  bool user_autorization::validate_user_command<command_type::group_playslit_view>(TgBot::Message::Ptr message) {
+  bool user_autorization::validate_user_command<command_type::group_playslit_view>(
+      const helpers::handler_context& context,
+      TgBot::Message::Ptr message) {
     AUTOMEASURE_TG
-    if (!validate_user(message)) {
+    if (!validate_user(context, message)) {
       return false;
     }
 
@@ -156,9 +171,11 @@ namespace ymsummorizer::tgbot::helpers {
   }
 
   template<>
-  bool user_autorization::validate_user_command<command_type::group_playslit_add>(TgBot::Message::Ptr message) {
+  bool user_autorization::validate_user_command<command_type::group_playslit_add>(
+      const helpers::handler_context& context,
+      TgBot::Message::Ptr message) {
     AUTOMEASURE_TG
-    if (!validate_user(message)) {
+    if (!validate_user(context, message)) {
       return false;
     }
 
@@ -166,9 +183,11 @@ namespace ymsummorizer::tgbot::helpers {
   }
 
   template<>
-  bool user_autorization::validate_user_command<command_type::group_playslit_remove>(TgBot::Message::Ptr message) {
+  bool user_autorization::validate_user_command<command_type::group_playslit_remove>(
+      const helpers::handler_context& context,
+      TgBot::Message::Ptr message) {
     AUTOMEASURE_TG
-    if (!validate_user(message)) {
+    if (!validate_user(context, message)) {
       return false;
     }
 
@@ -176,9 +195,9 @@ namespace ymsummorizer::tgbot::helpers {
   }
 
   template<command_type CT>
-  bool user_autorization::validate_user_command(TgBot::Message::Ptr message) {
+  bool user_autorization::validate_user_command(const helpers::handler_context& context, TgBot::Message::Ptr message) {
     AUTOMEASURE_TG
-    return validate_user(message);
+    return validate_user(context, message);
   }
 
 } // namespace ymsummorizer::tgbot::helpers

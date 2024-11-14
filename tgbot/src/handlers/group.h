@@ -6,11 +6,10 @@
 
 namespace ymsummorizer::tgbot::handlers {
 
-  template<class Base>
   class group: private helpers::user_autorization {
 public:
     group();
-    virtual ~group();
+    ~group();
 
     group(const group&) = delete;
     group& operator=(const group&) = delete;
@@ -18,9 +17,11 @@ public:
     group(group&&) = delete;
     group& operator=(group&&) = delete;
 
-    void on_group_list(TgBot::Message::Ptr message);
-    void on_group_create(TgBot::Message::Ptr message);
-    void on_group_delete(TgBot::Message::Ptr message);
+    void init_commands(const helpers::handler_context& context);
+
+    void on_group_list(const helpers::handler_context& context, TgBot::Message::Ptr message);
+    void on_group_create(const helpers::handler_context& context, TgBot::Message::Ptr message);
+    void on_group_delete(const helpers::handler_context& context, TgBot::Message::Ptr message);
   };
 
 } // namespace ymsummorizer::tgbot::handlers

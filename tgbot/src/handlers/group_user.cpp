@@ -10,46 +10,47 @@
 
 namespace ymsummorizer::tgbot::handlers {
 
-  template class group_user<bot_impl>;
+  group_user::group_user() { }
+  group_user::~group_user() = default;
 
-  template<class Base>
-  group_user<Base>::group_user() { }
-  template<class Base>
-  group_user<Base>::~group_user() = default;
+  void group_user::init_commands(const helpers::handler_context& context) {
+    AUTOLOG_TG
 
-  template<class Base>
-  void group_user<Base>::on_group_user_add(TgBot::Message::Ptr message) {
-    AUTOMEASURE_TG
-    if (!validate_user_command<command_type::group_user_remove>(message)) {
-      return;
-    }
-
-    // TODO(Arseny802): implement bot_impl::on_group_user_remove
-    auto& bot = static_cast<Base*>(this)->get_bot();
-    bot.getApi().sendMessage(message->chat->id, "Я пока такое не поддерживаю...");
+    context.bot.getEvents().onCommand("group_user_add",
+                                      std::bind(&group_user::on_group_user_add, this, context, std::placeholders::_1));
+    context.bot.getEvents().onCommand(
+        "group_user_remove", std::bind(&group_user::on_group_user_remove, this, context, std::placeholders::_1));
+    context.bot.getEvents().onCommand("group_leave",
+                                      std::bind(&group_user::on_group_leave, this, context, std::placeholders::_1));
   }
 
-  template<class Base>
-  void group_user<Base>::on_group_user_remove(TgBot::Message::Ptr message) {
+  void group_user::on_group_user_add(const helpers::handler_context& context, TgBot::Message::Ptr message) {
     AUTOMEASURE_TG
-    if (!validate_user_command<command_type::group_user_remove>(message)) {
+    if (!validate_user_command<command_type::group_user_add>(context, message)) {
       return;
     }
 
-    // TODO(Arseny802): implement bot_impl::on_group_user_remove
-    auto& bot = static_cast<Base*>(this)->get_bot();
-    bot.getApi().sendMessage(message->chat->id, "Я пока такое не поддерживаю...");
+    // TODO(Arseny802): implement bot_impl::on_group_user_add
+    context.bot.getApi().sendMessage(message->chat->id, "Я пока такое не поддерживаю...");
   }
 
-  template<class Base>
-  void group_user<Base>::on_group_leave(TgBot::Message::Ptr message) {
+  void group_user::on_group_user_remove(const helpers::handler_context& context, TgBot::Message::Ptr message) {
     AUTOMEASURE_TG
-    if (!validate_user_command<command_type::group_user_remove>(message)) {
+    if (!validate_user_command<command_type::group_user_remove>(context, message)) {
       return;
     }
 
     // TODO(Arseny802): implement bot_impl::on_group_user_remove
-    auto& bot = static_cast<Base*>(this)->get_bot();
-    bot.getApi().sendMessage(message->chat->id, "Я пока такое не поддерживаю...");
+    context.bot.getApi().sendMessage(message->chat->id, "Я пока такое не поддерживаю...");
+  }
+
+  void group_user::on_group_leave(const helpers::handler_context& context, TgBot::Message::Ptr message) {
+    AUTOMEASURE_TG
+    if (!validate_user_command<command_type::group_leave>(context, message)) {
+      return;
+    }
+
+    // TODO(Arseny802): implement bot_impl::on_group_leave
+    context.bot.getApi().sendMessage(message->chat->id, "Я пока такое не поддерживаю...");
   }
 } // namespace ymsummorizer::tgbot::handlers

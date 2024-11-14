@@ -83,6 +83,4 @@ namespace ymsummorizer::tgbot {
     /// Аргумент - маска прав доступа.
     // access_edit
   };
-
-  constexpr size_t command_type_count = sizeof(command_type) / sizeof(std::underlying_type_t<command_type>);
 } // namespace ymsummorizer::tgbot
