@@ -1,4 +1,6 @@
 #pragma once
+#include "playlist.h"
+
 #include <string>
 #include <string_view>
 #include <vector>
@@ -9,6 +11,7 @@ namespace ymsummorizer::common {
     std::string id;
     std::string name;
     std::vector<std::string> user_ids;
+    std::vector<playlist> playlists;
 
     std::string format() const;
 

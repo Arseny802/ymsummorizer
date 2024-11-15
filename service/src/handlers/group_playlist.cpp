@@ -68,24 +68,36 @@ namespace ymsummorizer::service::handlers {
           continue;
         }
 
-        ymapi::client client(user_it->login_yandex, user_it->token);
-        ymapi::playlist_ptr playlist_ym = client.playlist_create(playlist.name);
+        try {
+          ymapi::client client(user_it->login_yandex, user_it->token);
+          ymapi::playlist_ptr playlist_ym = client.playlist_create(playlist.name);
 
-        if (!playlist_ym) {
-          log()->error("Failed to create playlist '{}' for user '{}'.", playlist.name, user_it->login_yandex);
-          continue;
+          if (!playlist_ym) {
+            log()->error("Failed to create playlist '{}' for user '{}'.", playlist.name, user_it->login_yandex);
+            continue;
+          }
+
+          log()->info("Created playlist '{}' (kind {}, uid {}, uuid {}) for user '{}'.",
+                      playlist_ym->title,
+                      playlist_ym->kind,
+                      playlist_ym->uid,
+                      playlist_ym->playlistUuid,
+                      playlist_ym->owner.login);
+
+          common::playlist::yandex playlist_yandex;
+          playlist_yandex.kind = playlist_ym->kind;
+          playlist_yandex.user_id = user_it->id;
+          playlist.yandex_users.emplace_back(playlist_yandex);
+        } catch (const std::exception& e) {
+          log()->error(
+              "Failed to create playlist '{}' for user '{}': {}", playlist.name, user_it->login_yandex, e.what());
         }
-
-        log()->info("Created playlist '{}' (kind {}, uid {}, uuid {}) for user '{}'.",
-                    playlist_ym->title,
-                    playlist_ym->kind,
-                    playlist_ym->uid,
-                    playlist_ym->playlistUuid,
-                    playlist_ym->owner.login);
       }
 
       ret->ok = true;
-      // log()->info("Group '{}' created.", playlist.name);
+      log()->info("Playlist '{}' created, id: {}.", playlist.name, playlist.id);
+      db_.add_playlist(playlist);
+      db_.flash();
     } catch (const std::exception& e) {
       log()->error("Failed to create playlist: {}", e.what());
       ret->ok = false;

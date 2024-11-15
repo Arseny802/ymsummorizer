@@ -10,6 +10,13 @@ namespace ymsummorizer::common {
     std::string name;
     std::string group_id;
 
+    struct yandex {
+      std::string user_id;
+      int kind;
+    };
+
+    std::vector<yandex> yandex_users;
+
     std::string format() const;
 
     static bool is_valid_name(const std::string_view name) noexcept;

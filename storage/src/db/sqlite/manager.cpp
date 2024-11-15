@@ -29,6 +29,11 @@ namespace ymsummorizer::storage::db::sqlite {
     return true;
   }
 
+  bool manager::flash() {
+    AUTOLOG_ST
+    return true;
+  }
+
   bool manager::create_db() {
     AUTOLOG_ST
 
@@ -147,7 +152,7 @@ namespace ymsummorizer::storage::db::sqlite {
     return std::nullopt;
   }
 
-  bool manager::update_bot_info(const common::bot_info& bot_info) {
+  bool manager::update_bot_info(const common::bot_info&) {
     AUTOLOG_ST
     log()->error("get_stored_users not implemented!");
     return false;
@@ -170,34 +175,34 @@ namespace ymsummorizer::storage::db::sqlite {
     return {};
   }
 
-  bool manager::add_user(const common::user& user) {
+  bool manager::add_user(const common::user&) {
     AUTOLOG_ST
     log()->error("add_user not implemented!");
     return false;
   }
-  bool manager::add_group(const common::group& group) {
+  bool manager::add_group(const common::group&) {
     AUTOLOG_ST
     log()->error("add_group not implemented!");
     return false;
   }
 
-  bool manager::remove_user(const std::string& user_id) {
+  bool manager::remove_user(const std::string&) {
     AUTOLOG_ST
     log()->error("remove_user not implemented!");
     return false;
   }
-  bool manager::remove_group(const std::string& group_id) {
+  bool manager::remove_group(const std::string&) {
     AUTOLOG_ST
     log()->error("remove_group not implemented!");
     return false;
   }
 
-  bool manager::update_user(const common::user& user) {
+  bool manager::update_user(const common::user&) {
     AUTOLOG_ST
     log()->error("update_user not implemented!");
     return false;
   }
-  bool manager::update_group(const common::group& group) {
+  bool manager::update_group(const common::group&) {
     AUTOLOG_ST
     log()->error("update_group not implemented!");
     return false;
@@ -214,23 +219,53 @@ namespace ymsummorizer::storage::db::sqlite {
     return {};
   }
 
-  bool manager::add_admin(const common::user& user) {
+  bool manager::add_admin(const common::user&) {
     AUTOLOG_ST
     log()->error("add_admin not implemented!");
     return false;
   }
-  bool manager::add_superadmin(const common::group& group) {
+  bool manager::add_superadmin(const common::group&) {
     AUTOLOG_ST
     log()->error("add_superadmin not implemented!");
     return false;
   }
 
-  bool manager::remove_admin(const std::string& user_id) {
+  bool manager::remove_admin(const std::string&) {
     AUTOLOG_ST
     log()->error("remove_admin not implemented!");
     return false;
   }
-  bool manager::remove_superadmin(const std::string& group_id) {
+  bool manager::remove_superadmin(const std::string&) {
+    AUTOLOG_ST
+    log()->error("remove_superadmin not implemented!");
+    return false;
+  }
+
+  std::vector<common::playlist> manager::get_group_playlists(const std::string&, const std::string&) {
+    AUTOLOG_ST
+    log()->error("remove_superadmin not implemented!");
+    return {};
+  }
+
+  bool manager::add_playlist(const common::playlist&) {
+    AUTOLOG_ST
+    log()->error("remove_superadmin not implemented!");
+    return false;
+  }
+
+  bool manager::remove_playlist(const common::playlist&) {
+    AUTOLOG_ST
+    log()->error("remove_superadmin not implemented!");
+    return false;
+  }
+
+  bool manager::add_playlist_yandex(const common::playlist&, const common::playlist::yandex&) {
+    AUTOLOG_ST
+    log()->error("remove_superadmin not implemented!");
+    return false;
+  }
+
+  bool manager::remove_playlist_yandex(const common::playlist&, const common::playlist::yandex&) {
     AUTOLOG_ST
     log()->error("remove_superadmin not implemented!");
     return false;

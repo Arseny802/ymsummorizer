@@ -58,6 +58,11 @@ namespace ymsummorizer::storage {
     return true;
   }
 
+  bool db_manager::flash() {
+    AUTOLOG_ST
+    return manager_pimpl->flash();
+  }
+
   /// settings
   std::string db_manager::get_stored_setting(common::setting& setting, std::string default_value) {
     AUTOLOG_ST
@@ -172,5 +177,33 @@ namespace ymsummorizer::storage {
   bool db_manager::remove_superadmin(const std::string& group_id) {
     AUTOLOG_ST
     return manager_pimpl->remove_superadmin(group_id);
+  }
+
+  std::vector<common::playlist> db_manager::get_group_playlists(const std::string& group_id,
+                                                                const std::string& playlist_id) {
+    AUTOLOG_ST
+    return manager_pimpl->get_group_playlists(group_id, playlist_id);
+  }
+
+  bool db_manager::add_playlist(const common::playlist& playlist) {
+    AUTOLOG_ST
+    return manager_pimpl->add_playlist(playlist);
+  }
+
+  bool db_manager::remove_playlist(const common::playlist& playlist) {
+    AUTOLOG_ST
+    return manager_pimpl->remove_playlist(playlist);
+  }
+
+  bool db_manager::add_playlist_yandex(const common::playlist& playlist,
+                                       const common::playlist::yandex& playlist_yandex) {
+    AUTOLOG_ST
+    return manager_pimpl->add_playlist_yandex(playlist, playlist_yandex);
+  }
+
+  bool db_manager::remove_playlist_yandex(const common::playlist& playlist,
+                                          const common::playlist::yandex& playlist_yandex) {
+    AUTOLOG_ST
+    return manager_pimpl->remove_playlist_yandex(playlist, playlist_yandex);
   }
 } // namespace ymsummorizer::storage

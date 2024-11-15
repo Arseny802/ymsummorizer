@@ -10,6 +10,7 @@ public:
     virtual ~manager_base();
 
     virtual bool connect(const std::string& db_name) = 0;
+    virtual bool flash() = 0;
     virtual bool create_db() = 0;
 
     /// settings
@@ -41,6 +42,17 @@ public:
 
     virtual bool remove_admin(const std::string& user_id) = 0;
     virtual bool remove_superadmin(const std::string& group_id) = 0;
+
+    virtual std::vector<common::playlist> get_group_playlists(const std::string& group_id = "",
+                                                              const std::string& playlist_id = "") = 0;
+
+    virtual bool add_playlist(const common::playlist& playlist) = 0;
+    virtual bool remove_playlist(const common::playlist& playlist) = 0;
+
+    virtual bool add_playlist_yandex(const common::playlist& playlist,
+                                     const common::playlist::yandex& playlist_yandex) = 0;
+    virtual bool remove_playlist_yandex(const common::playlist& playlist,
+                                        const common::playlist::yandex& playlist_yandex) = 0;
 
 protected:
     std::string get_sql_file(const std::string& file_name) const;

@@ -29,6 +29,12 @@ namespace ymsummorizer::storage::db::cfg {
     return true;
   }
 
+  bool manager::flash() {
+    AUTOLOG_ST
+    save_data();
+    return true;
+  }
+
   bool manager::create_db() {
     AUTOLOG_ST
 
@@ -98,10 +104,7 @@ namespace ymsummorizer::storage::db::cfg {
   }
   void manager::save_data() {
     AUTOLOG_ST
-    if (!data_) {
-      log()->error("Data is empty!");
-      return;
-    }
+    assert(data_ && "Data is empty!");
 
     // write prettified JSON to another file
     std::ofstream result_cfg_file(cfg_file_path_);
@@ -111,20 +114,14 @@ namespace ymsummorizer::storage::db::cfg {
 
   bool manager::get_stored_setting(common::setting& setting) {
     AUTOLOG_ST
-    if (!data_) {
-      log()->error("Data is empty!");
-      return false;
-    }
+    assert(data_ && "Data is empty!");
 
     return true;
   }
 
   std::optional<std::vector<common::setting>> manager::get_stored_settings() {
     AUTOLOG_ST
-    if (!data_) {
-      log()->error("Data is empty!");
-      return std::nullopt;
-    }
+    assert(data_ && "Data is empty!");
 
     std::vector<common::setting> result;
 
@@ -133,10 +130,7 @@ namespace ymsummorizer::storage::db::cfg {
 
   bool manager::set_stored_setting(const common::setting& setting) {
     AUTOLOG_ST
-    if (!data_) {
-      log()->error("Data is empty!");
-      return false;
-    }
+    assert(data_ && "Data is empty!");
 
     return true;
   }
@@ -173,10 +167,7 @@ namespace ymsummorizer::storage::db::cfg {
 
   bool manager::delete_bot_info() {
     AUTOLOG_ST
-    if (!data_) {
-      log()->error("Data is empty!");
-      return true;
-    }
+    assert(data_ && "Data is empty!");
 
     data_->erase("bot_info");
     save_data();
@@ -186,14 +177,8 @@ namespace ymsummorizer::storage::db::cfg {
 
   std::vector<common::user> manager::get_stored_users() {
     AUTOLOG_ST
-    if (!data_) {
-      log()->error("Data is empty!");
-      return {};
-    }
-    if (!data_->contains("users") || (*data_)["users"].empty()) {
-      log()->error("No stored users!");
-      return {};
-    }
+    assert(data_ && "Data is empty!");
+    assert(data_->contains("users") && !(*data_)["users"].empty() && "No stored users!");
 
     std::vector<common::user> result;
     for (const auto& user: (*data_)["users"]) {
@@ -210,14 +195,8 @@ namespace ymsummorizer::storage::db::cfg {
 
   std::vector<common::group> manager::get_stored_groups() {
     AUTOLOG_ST
-    if (!data_) {
-      log()->error("Data is empty!");
-      return {};
-    }
-    if (!data_->contains("groups") || (*data_)["groups"].empty()) {
-      log()->error("No stored users!");
-      return {};
-    }
+    assert(data_ && "Data is empty!");
+    assert(data_->contains("groups") && !(*data_)["groups"].empty() && "No stored groups!");
 
     std::vector<common::group> result;
     for (const auto& group: (*data_)["groups"]) {
@@ -227,6 +206,9 @@ namespace ymsummorizer::storage::db::cfg {
       for (const auto& user: (*data_)["users"]) {
         current_group.user_ids.emplace_back(user.at("id"));
       }
+
+      current_group.playlists = get_group_playlists(current_group.id, "");
+
       result.emplace_back(std::move(current_group));
     }
 
@@ -235,20 +217,14 @@ namespace ymsummorizer::storage::db::cfg {
 
   bool manager::add_user(const common::user& user) {
     AUTOLOG_ST
-    if (!data_) {
-      log()->error("Data is empty!");
-      return false;
-    }
+    assert(data_ && "Data is empty!");
 
     log()->error("add_user not implemented!");
     return false;
   }
   bool manager::add_group(const common::group& group) {
     AUTOLOG_ST
-    if (!data_) {
-      log()->error("Data is empty!");
-      return false;
-    }
+    assert(data_ && "Data is empty!");
 
     log()->error("add_group not implemented!");
     return false;
@@ -256,20 +232,14 @@ namespace ymsummorizer::storage::db::cfg {
 
   bool manager::remove_user(const std::string& user_id) {
     AUTOLOG_ST
-    if (!data_) {
-      log()->error("Data is empty!");
-      return false;
-    }
+    assert(data_ && "Data is empty!");
 
     log()->error("remove_user not implemented!");
     return false;
   }
   bool manager::remove_group(const std::string& group_id) {
     AUTOLOG_ST
-    if (!data_) {
-      log()->error("Data is empty!");
-      return false;
-    }
+    assert(data_ && "Data is empty!");
 
     log()->error("remove_group not implemented!");
     return false;
@@ -277,20 +247,14 @@ namespace ymsummorizer::storage::db::cfg {
 
   bool manager::update_user(const common::user& user) {
     AUTOLOG_ST
-    if (!data_) {
-      log()->error("Data is empty!");
-      return false;
-    }
+    assert(data_ && "Data is empty!");
 
     log()->error("update_user not implemented!");
     return false;
   }
   bool manager::update_group(const common::group& group) {
     AUTOLOG_ST
-    if (!data_) {
-      log()->error("Data is empty!");
-      return false;
-    }
+    assert(data_ && "Data is empty!");
 
     log()->error("update_group not implemented!");
     return false;
@@ -298,14 +262,8 @@ namespace ymsummorizer::storage::db::cfg {
 
   std::vector<std::string> manager::get_admin_ids() {
     AUTOLOG_ST
-    if (!data_) {
-      log()->error("Data is empty!");
-      return {};
-    }
-    if (!data_->contains("admins") || (*data_)["admins"].empty()) {
-      log()->error("No stored users!");
-      return {};
-    }
+    assert(data_ && "Data is empty!");
+    assert(data_->contains("admins") && !(*data_)["admins"].empty() && "No stored admins!");
 
     std::vector<std::string> result;
     for (const auto& user: (*data_)["admins"]) {
@@ -316,14 +274,8 @@ namespace ymsummorizer::storage::db::cfg {
 
   std::vector<std::string> manager::get_superadmin_ids() {
     AUTOLOG_ST
-    if (!data_) {
-      log()->error("Data is empty!");
-      return {};
-    }
-    if (!data_->contains("superadmins") || (*data_)["superadmins"].empty()) {
-      log()->error("No stored users!");
-      return {};
-    }
+    assert(data_ && "Data is empty!");
+    assert(data_->contains("superadmins") && !(*data_)["superadmins"].empty() && "No stored superadmins!");
 
     std::vector<std::string> result;
     for (const auto& user: (*data_)["superadmins"]) {
@@ -334,20 +286,14 @@ namespace ymsummorizer::storage::db::cfg {
 
   bool manager::add_admin(const common::user& user) {
     AUTOLOG_ST
-    if (!data_) {
-      log()->error("Data is empty!");
-      return false;
-    }
+    assert(data_ && "Data is empty!");
 
     log()->error("add_admin not implemented!");
     return false;
   }
   bool manager::add_superadmin(const common::group& group) {
     AUTOLOG_ST
-    if (!data_) {
-      log()->error("Data is empty!");
-      return false;
-    }
+    assert(data_ && "Data is empty!");
 
     log()->error("add_superadmin not implemented!");
     return false;
@@ -355,22 +301,112 @@ namespace ymsummorizer::storage::db::cfg {
 
   bool manager::remove_admin(const std::string& user_id) {
     AUTOLOG_ST
-    if (!data_) {
-      log()->error("Data is empty!");
-      return false;
-    }
+    assert(data_ && "Data is empty!");
 
     log()->error("remove_admin not implemented!");
     return false;
   }
   bool manager::remove_superadmin(const std::string& group_id) {
     AUTOLOG_ST
-    if (!data_) {
-      log()->error("Data is empty!");
-      return false;
-    }
+    assert(data_ && "Data is empty!");
 
     log()->error("remove_superadmin not implemented!");
+    return false;
+  }
+
+  std::vector<common::playlist> manager::get_group_playlists(const std::string& group_id,
+                                                             const std::string& playlist_id) {
+    AUTOLOG_ST
+    assert(data_ && "Data is empty!");
+    assert(data_->contains("groups") && !(*data_)["groups"].empty() && "No stored groups!");
+
+    std::vector<common::playlist> result;
+    for (const auto& current_group: (*data_)["groups"]) {
+      std::string current_group_id = current_group.contains("id") ? current_group["id"] : "";
+      if (!group_id.empty() && current_group_id != group_id) {
+        continue;
+      }
+
+      if (!current_group.contains("playlists") || current_group["playlists"].empty()) {
+        std::string current_group_name = current_group.contains("name") ? current_group["name"] : "";
+        log()->warning("No stored playlists in group '{}' (name: '{}')!", current_group_id, current_group_name);
+        if (group_id.empty()) {
+          continue;
+        }
+        return result;
+      }
+
+      for (const auto& playlist: current_group["playlists"]) {
+        if (!playlist_id.empty() && playlist["id"] != playlist_id) {
+          continue;
+        }
+        common::playlist current_playlist;
+        current_playlist.group_id = current_group_id;
+        current_playlist.id = playlist["id"];
+        current_playlist.name = playlist["name"];
+
+        for (const auto& yandex_user: playlist["yandex"]) {
+          common::playlist::yandex current_playlist_yandex;
+          if (!yandex_user.contains("user_id") || !yandex_user.contains("kind")) {
+            log()->error(
+                "Ivalid yandex user in playlist '{}' (name: '{}')!", current_playlist.id, current_playlist.name);
+            continue;
+          }
+
+          current_playlist_yandex.user_id = yandex_user["user_id"];
+          current_playlist_yandex.kind = yandex_user["kind"];
+          current_playlist.yandex_users.emplace_back(std::move(current_playlist_yandex));
+        }
+
+        result.emplace_back(std::move(current_playlist));
+      }
+    }
+
+    return result;
+  }
+
+  bool manager::add_playlist(const common::playlist& playlist) {
+    AUTOLOG_ST
+    assert(!playlist.group_id.empty() && "playlist.group_id is empty!");
+    assert(data_ && "Data is empty!");
+    assert(data_->contains("groups") && !(*data_)["groups"].empty() && "No stored groups!");
+
+    for (auto& current_group: (*data_)["groups"]) {
+      std::string current_group_id = current_group.contains("id") ? current_group["id"] : "";
+      if (current_group_id != playlist.group_id) {
+        continue;
+      }
+
+      if (!current_group.contains("playlists")) {
+        current_group["playlists"] = nlohmann::json::array();
+      }
+    }
+
+    log()->error("No stored group with id '{}'!", playlist.group_id);
+    return false;
+  }
+
+  bool manager::remove_playlist(const common::playlist& playlist) {
+    AUTOLOG_ST
+    assert(data_ && "Data is empty!");
+
+    return false;
+  }
+
+  bool manager::add_playlist_yandex(const common::playlist& playlist, const common::playlist::yandex& playlist_yandex) {
+    AUTOLOG_ST
+    assert(!playlist.group_id.empty() && "playlist.group_id is empty!");
+    assert(data_ && "Data is empty!");
+
+    return false;
+  }
+
+  bool manager::remove_playlist_yandex(const common::playlist& playlist,
+                                       const common::playlist::yandex& playlist_yandex) {
+    AUTOLOG_ST
+    assert(!playlist.group_id.empty() && "playlist.group_id is empty!");
+    assert(data_ && "Data is empty!");
+
     return false;
   }
 } // namespace ymsummorizer::storage::db::cfg

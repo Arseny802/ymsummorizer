@@ -23,6 +23,7 @@ public:
     db_manager& operator=(db_manager&& other) = delete;
 
     bool connect();
+    bool flash();
 
     /// settings
     std::string get_stored_setting(const std::string& key, std::string default_value = std::string());
@@ -53,6 +54,15 @@ public:
 
     bool remove_admin(const std::string& user_id);
     bool remove_superadmin(const std::string& group_id);
+
+    std::vector<common::playlist> get_group_playlists(const std::string& group_id = "",
+                                                      const std::string& playlist_id = "");
+
+    bool add_playlist(const common::playlist& playlist);
+    bool remove_playlist(const common::playlist& playlist);
+
+    bool add_playlist_yandex(const common::playlist& playlist, const common::playlist::yandex& playlist_yandex);
+    bool remove_playlist_yandex(const common::playlist& playlist, const common::playlist::yandex& playlist_yandex);
 
 private:
     std::atomic_bool connected_ = false;

@@ -11,6 +11,7 @@ public:
     ~manager() override;
 
     bool connect(const std::string& db_name) override;
+    bool flash() override;
     bool create_db() override;
 
     /// settings
@@ -42,6 +43,17 @@ public:
 
     bool remove_admin(const std::string& user_id);
     bool remove_superadmin(const std::string& group_id);
+
+    std::vector<common::playlist> get_group_playlists(const std::string& group_id = "",
+                                                      const std::string& playlist_id = "") override;
+
+    bool add_playlist(const common::playlist& playlist) override;
+    bool remove_playlist(const common::playlist& playlist) override;
+
+    bool add_playlist_yandex(const common::playlist& playlist,
+                             const common::playlist::yandex& playlist_yandex) override;
+    bool remove_playlist_yandex(const common::playlist& playlist,
+                                const common::playlist::yandex& playlist_yandex) override;
 
 private:
     std::string get_db_version();
