@@ -5,3 +5,4 @@
 #include "playlist.h"
 #include "setting.h"
 #include "user.h"
+#include "version.h"

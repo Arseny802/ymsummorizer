@@ -44,3 +44,6 @@ set_target_properties(${PROJECT_NAME} PROPERTIES
 )
 
 add_subdirectory(tests)
+
+string(TIMESTAMP BUILD_TIME)
+configure_file(version.h.in ${PROJECT_SOURCE_DIR}/include/common/version.h)
