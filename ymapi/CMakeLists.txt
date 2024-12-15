@@ -3,8 +3,7 @@ project(ymsummorizer.ymapi VERSION 0.0.1)
 
 find_package(ZLIB)
 find_package(CURL)
-#find_package(cpr CONFIG REQUIRED)
-find_package(pugixml CONFIG REQUIRED)
+find_package(cpr CONFIG REQUIRED)
 find_package(nlohmann_json CONFIG REQUIRED)
 
 add_library(${PROJECT_NAME} STATIC
@@ -22,7 +21,6 @@ target_link_libraries(${PROJECT_NAME} PUBLIC
   ZLIB::ZLIB
   CURL::libcurl
   cpr::cpr
-  pugixml::pugixml
   nlohmann_json::nlohmann_json
 )
 

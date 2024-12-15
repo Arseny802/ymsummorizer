@@ -1,8 +1,8 @@
 cmake_minimum_required(VERSION 3.23)
 project(ymsummorizer.tgbot VERSION 0.0.1)
 
+find_package(tgbot CONFIG REQUIRED)
 find_package(Boost CONFIG REQUIRED)
-find_package(pugixml CONFIG REQUIRED)
 find_package(nlohmann_json CONFIG REQUIRED)
 
 add_library(${PROJECT_NAME} STATIC
@@ -24,10 +24,9 @@ target_precompile_headers(${PROJECT_NAME}
 target_link_libraries(${PROJECT_NAME} PUBLIC
   ymsummorizer.common
   ymsummorizer.storage
-  pugixml::pugixml
   nlohmann_json::nlohmann_json
   Boost::boost
-  TgBot
+  tgbot::tgbot
 )
 
 target_include_directories(${PROJECT_NAME}

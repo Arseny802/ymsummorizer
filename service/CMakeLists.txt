@@ -1,10 +1,6 @@
 cmake_minimum_required(VERSION 3.23)
 project(ymsummorizer.service VERSION 0.0.1)
 
-#find_package(cpr CONFIG REQUIRED)
-find_package(pugixml CONFIG REQUIRED)
-find_package(nlohmann_json CONFIG REQUIRED)
-
 add_executable(${PROJECT_NAME}
   src/handlers/group_playlist.cpp
   src/handlers/group_user.cpp

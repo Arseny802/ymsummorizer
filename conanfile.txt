@@ -1,11 +1,11 @@
 [requires]
 magic_enum/0.9.6
-boost/1.84.0
+boost/1.83.0
+cpr/1.11.1
+tgbot/1.8
 sqlite3/3.46.0
-pugixml/1.14
 nlohmann_json/3.11.3
-openssl/3.3.2
-libcurl/8.8.0
+libcurl/8.10.1
 zlib/1.3.1
 fmt/10.0.0
 spdlog/1.11.0
@@ -19,5 +19,6 @@ CMakeToolchain
 cmake_layout
 
 [options]
+tgbot/*:shared=False
 boost/*:without_stacktrace=True
 boost/*:without_test=True

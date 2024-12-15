@@ -33,10 +33,6 @@ if (CMAKE_COMPILER_IS_GNUCXX)
   message(STATUS "GCC detected, adding compile flags")
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra")
   set(CMAKE_CXX_FLAGS " ${CMAKE_CXX_FLAGS} -fPIC")
-  #set(CMAKE_CXX_IMPLICIT_LINK_LIBRARIES "")
-  #set(CMAKE_CXX_IMPLICIT_LINK_DIRECTORIES "")
-  #set(CMAKE_CXX_COMPILER_WORKS 1)
-  #add_compile_options("-lstdc++11")
 elseif (MSVC) # building on visual c++
   message(STATUS "MSVC detected, adding compile flags")
   add_compile_options("$<$<C_COMPILER_ID:MSVC>:/utf-8>")
@@ -44,8 +40,7 @@ elseif (MSVC) # building on visual c++
   ADD_DEFINITIONS("/EHsc")
 endif (CMAKE_COMPILER_IS_GNUCXX)
 
-#set(CMAKE_NO_SYSTEM_FROM_IMPORTED ON)
-set(CPR_USE_SYSTEM_CURL ON)
+set(BUILD_SHARED_LIBS OFF)
 
 enable_testing()
 

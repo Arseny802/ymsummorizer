@@ -12,8 +12,8 @@ add_library(${PROJECT_NAME} STATIC
   src/pch.cpp
 )
 
-target_precompile_headers(${PROJECT_NAME}
-  PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/src/pch.h)
+#target_precompile_headers(${PROJECT_NAME}
+#  PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/src/pch.h)
 
 set(OS_SPECIFIC_LIBS "")
 if (WIN32)
@@ -28,6 +28,7 @@ target_link_libraries(${PROJECT_NAME} PUBLIC
   ${OS_SPECIFIC_LIBS}
   magic_enum::magic_enum
   Boost::boost
+  bcrypt
 )
 
 target_include_directories(${PROJECT_NAME}
@@ -45,5 +46,4 @@ set_target_properties(${PROJECT_NAME} PROPERTIES
 
 add_subdirectory(tests)
 
-string(TIMESTAMP BUILD_TIME)
 configure_file(version.h.in ${PROJECT_SOURCE_DIR}/include/common/version.h)
