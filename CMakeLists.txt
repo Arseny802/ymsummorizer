@@ -5,6 +5,7 @@ set(VENDOR "Arseny802")
 message(STATUS "-- -- -- -- -- -- -- -- -- -- -- -- -- -- --")
 message(STATUS "BUILD_TOOL_TYPE_NAME: ${BUILD_TOOL_TYPE_NAME}")
 set(CMAKE_BINARY_DIR "${PROJECT_SOURCE_DIR}/bin/${BUILD_TOOL_TYPE_NAME}")
+set(CMAKE_INSTALL_PREFIX "${PROJECT_SOURCE_DIR}/bin/install/${BUILD_TOOL_TYPE_NAME}")
 
 SET(BUILD_ARCHITECTURE "NOT_DEFINED")
 if(${BUILD_TOOL_TYPE_NAME} MATCHES "^.*x86.*$")
@@ -51,3 +52,7 @@ add_subdirectory(ymapi)
 add_subdirectory(tgbot)
 add_subdirectory(service)
 
+include(InstallRequiredSystemLibraries)
+install(
+  TARGETS ymsummorizer.service
+)
