@@ -1,5 +1,4 @@
-bin
-cmake_build
+*build
 CMakeUserPresets.json
 
 ymsummorizer.storage.json

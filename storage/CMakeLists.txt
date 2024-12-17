@@ -22,7 +22,10 @@ add_library(${PROJECT_NAME} STATIC
 )
 
 target_precompile_headers(${PROJECT_NAME}
-  PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/src/pch.h)
+  PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include/storage/db_manager.h
+  PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include/storage/hare_storage.h
+  PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/src/pch.h
+)
 
 target_link_libraries(${PROJECT_NAME} PUBLIC
   ymsummorizer.common

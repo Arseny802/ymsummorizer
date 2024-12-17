@@ -12,8 +12,10 @@ add_library(${PROJECT_NAME} STATIC
   src/pch.cpp
 )
 
-#target_precompile_headers(${PROJECT_NAME}
-#  PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/src/pch.h)
+target_precompile_headers(${PROJECT_NAME}
+  PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include/common/common_pch.h
+  PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/src/pch.h
+)
 
 set(OS_SPECIFIC_LIBS "")
 if (WIN32)
