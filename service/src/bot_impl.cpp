@@ -1,11 +1,6 @@
 #include "pch.h"
 #include "bot_impl.h"
 
-#include "storage/db_manager.h"
-#include "tgbot/user_interaction.h"
-#include "tgbot/ymsummorizer_bot.h"
-#include "ymapi/client.h"
-
 namespace ymsummorizer::service {
 
   bot_impl::bot_impl(storage::db_manager&& db):

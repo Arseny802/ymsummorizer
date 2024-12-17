@@ -12,8 +12,6 @@
 #include "helpers/user_autorization.h"
 #include "helpers/usrcmd_callbck_cache.h"
 
-#include <memory>
-
 #include <tgbot/tgbot.h>
 
 namespace ymsummorizer::tgbot {

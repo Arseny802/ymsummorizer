@@ -5,3 +5,8 @@
 
 // Local files
 #include "tgbot/hare_tgbot.h"
+
+#include <boost/algorithm/string.hpp>
+#include <fmt/format.h>
+
+#include <tgbot/tgbot.h>

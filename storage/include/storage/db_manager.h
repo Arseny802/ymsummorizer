@@ -1,4 +1,7 @@
 #pragma once
+#include <atomic>
+#include <map>
+#include <memory>
 #include <optional>
 #include <string>
 #include <vector>

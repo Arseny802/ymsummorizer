@@ -1,8 +1,6 @@
 #include "pch.h"
 #include "manager_base.h"
 
-#include <cmrc/cmrc.hpp>
-
 CMRC_DECLARE(ymsummorizer::storage::sql_resources);
 
 namespace ymsummorizer::storage::db {

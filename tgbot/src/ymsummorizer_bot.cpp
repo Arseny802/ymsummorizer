@@ -1,7 +1,6 @@
 #include "pch.h"
 #include "tgbot/ymsummorizer_bot.h"
 #include "bot_impl.h"
-#include <memory>
 
 namespace ymsummorizer::tgbot {
 

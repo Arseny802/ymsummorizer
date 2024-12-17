@@ -1,4 +1,6 @@
 #pragma once
+#include "hare/config_custom.h"
+#include "hare/hare.hpp"
 
 namespace ymsummorizer::storage {
   void initialize_logging();

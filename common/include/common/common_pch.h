@@ -57,6 +57,8 @@
 #include <boost/uuid/uuid_generators.hpp> // generators
 #include <boost/uuid/uuid_io.hpp>         // streaming operators etc.
 
+#include <magic_enum.hpp>
+
 // Custom libraries
 #include "hare/config_custom.h"
 #include "hare/hare.hpp"

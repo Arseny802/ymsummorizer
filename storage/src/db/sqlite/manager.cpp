@@ -1,8 +1,6 @@
 #include "pch.h"
 #include "manager.h"
 
-#include <sqlite3.h>
-
 namespace ymsummorizer::storage::db::sqlite {
   manager::manager() {
     AUTOLOG_ST;

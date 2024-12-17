@@ -1,9 +1,6 @@
 #include "pch.h"
 #include "ymapi/client.h"
 
-#include <cpr/cpr.h>
-#include <nlohmann/json.hpp>
-
 namespace ymsummorizer::ymapi {
 
   /**
