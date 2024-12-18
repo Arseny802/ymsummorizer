@@ -14,8 +14,6 @@ add_library(${PROJECT_NAME} STATIC
 )
 
 target_precompile_headers(${PROJECT_NAME}
-  PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include/ymapi/client.h
-  PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include/ymapi/hare_ymapi.h
   PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/src/pch.h
 )
 

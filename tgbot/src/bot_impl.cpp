@@ -1,6 +1,8 @@
 #include "pch.h"
 #include "bot_impl.h"
 
+#include <tgbot/tgbot.h>
+
 namespace ymsummorizer::tgbot {
 
   bot_impl::bot_impl(std::string token, storage::db_manager& db): token_(std::move(token)), bot_(token_), db_(db) {
