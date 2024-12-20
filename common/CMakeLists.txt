@@ -5,9 +5,9 @@ find_package(magic_enum REQUIRED)
 find_package(Boost REQUIRED)
 
 add_library(${PROJECT_NAME} STATIC
-
   src/group.cpp
   src/playlist.cpp
+  src/playlist_track.cpp
   src/user.cpp
   src/pch.cpp
 )
@@ -30,7 +30,7 @@ target_link_libraries(${PROJECT_NAME} PUBLIC
   ${OS_SPECIFIC_LIBS}
   magic_enum::magic_enum
   Boost::boost
-  bcrypt
+  #bcrypt
 )
 
 target_include_directories(${PROJECT_NAME}

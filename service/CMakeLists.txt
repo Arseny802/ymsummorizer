@@ -6,6 +6,7 @@ add_executable(${PROJECT_NAME}
   src/handlers/group_user.cpp
   src/handlers/group.cpp
   src/handlers/user.cpp
+  src/maintenance/task.cpp
   src/bot_impl.cpp
   src/hare_service.cpp
   src/main.cpp
