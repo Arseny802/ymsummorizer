@@ -11,4 +11,5 @@ add_subdirectory(service)
 include(InstallRequiredSystemLibraries)
 install(
   TARGETS ymsummorizer.service
+  DESTINATION bin/ymsummorizer
 )
