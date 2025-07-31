@@ -20,16 +20,11 @@ class user : private helpers::user_autorization {
 
   void init_commands(const helpers::handler_context& context);
 
-  void on_start(const helpers::handler_context& context,
-                TgBot::Message::Ptr message);
-  void on_user_view(const helpers::handler_context& context,
-                    TgBot::Message::Ptr message);
-  void on_user_token_add(const helpers::handler_context& context,
-                         TgBot::Message::Ptr message);
-  void on_user_token_erase(const helpers::handler_context& context,
-                           TgBot::Message::Ptr message);
-  void on_token_edit(const helpers::handler_context& context,
-                     TgBot::Message::Ptr message);
+  void on_start(const helpers::handler_context& context, TgBot::Message::Ptr message);
+  void on_user_view(const helpers::handler_context& context, TgBot::Message::Ptr message);
+  void on_user_token_add(const helpers::handler_context& context, TgBot::Message::Ptr message);
+  void on_user_token_erase(const helpers::handler_context& context, TgBot::Message::Ptr message);
+  void on_token_edit(const helpers::handler_context& context, TgBot::Message::Ptr message);
 };
 
 }  // namespace ymsummorizer::tgbot::handlers

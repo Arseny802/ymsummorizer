@@ -3,11 +3,10 @@
 #define PROJECT_NAME "ymsummorizer"
 #endif
 #ifndef MODULE_NAME
-#define MODULE_NAME "storage.example"
+#define MODULE_NAME "tgbot"
 #endif
 #include "hare/hare.hpp"
 
-namespace ymsummorizer::storage::example {
-void initialize_logging();
+namespace ymsummorizer::tgbot {
 hare::hlogger_ptr log();
-}  // namespace ymsummorizer::storage::example
+}  // namespace ymsummorizer::tgbot

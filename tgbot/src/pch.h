@@ -1,10 +1,11 @@
 #pragma once
 
-// Standard libraries
+// Local files
 #include "common/common_pch.h"
 
-// Local files
-#include "tgbot/hare_tgbot.h"
+#include "hare_tgbot.h"
+
+// Standard libraries
+#include <fmt/format.h>
 
 #include <boost/algorithm/string.hpp>
-#include <fmt/format.h>

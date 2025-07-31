@@ -19,12 +19,9 @@ class group_playlist : private helpers::user_autorization {
 
   void init_commands(const helpers::handler_context& context);
 
-  void on_group_playslit_list(const helpers::handler_context& context,
-                              TgBot::Message::Ptr message);
-  void on_group_playslit_view(const helpers::handler_context& context,
-                              TgBot::Message::Ptr message);
-  void on_group_playslit_add(const helpers::handler_context& context,
-                             TgBot::Message::Ptr message);
+  void on_group_playslit_list(const helpers::handler_context& context, TgBot::Message::Ptr message);
+  void on_group_playslit_view(const helpers::handler_context& context, TgBot::Message::Ptr message);
+  void on_group_playslit_add(const helpers::handler_context& context, TgBot::Message::Ptr message);
   void on_group_playslit_remove(const helpers::handler_context& context,
                                 TgBot::Message::Ptr message);
 };

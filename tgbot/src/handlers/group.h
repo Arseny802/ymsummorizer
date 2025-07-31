@@ -19,12 +19,9 @@ class group : private helpers::user_autorization {
 
   void init_commands(const helpers::handler_context& context);
 
-  void on_group_list(const helpers::handler_context& context,
-                     TgBot::Message::Ptr message);
-  void on_group_create(const helpers::handler_context& context,
-                       TgBot::Message::Ptr message);
-  void on_group_delete(const helpers::handler_context& context,
-                       TgBot::Message::Ptr message);
+  void on_group_list(const helpers::handler_context& context, TgBot::Message::Ptr message);
+  void on_group_create(const helpers::handler_context& context, TgBot::Message::Ptr message);
+  void on_group_delete(const helpers::handler_context& context, TgBot::Message::Ptr message);
 };
 
 }  // namespace ymsummorizer::tgbot::handlers

@@ -45,20 +45,16 @@
 
 // std::format OR fmt::format
 #if __has_include(<format>)
-#  include <format>
+#include <format>
 #else
-#  include <fmt/core.h>
-#  include <fmt/format.h>
-#  include <fmt/ranges.h>
+#include <fmt/core.h>
+#include <fmt/format.h>
+#include <fmt/ranges.h>
 #endif
 
 // external libraries
-#include <boost/uuid/uuid.hpp>            // uuid class
-#include <boost/uuid/uuid_generators.hpp> // generators
-#include <boost/uuid/uuid_io.hpp>         // streaming operators etc.
-
 #include <magic_enum.hpp>
 
-// Custom libraries
-#include "hare/config_custom.h"
-#include "hare/hare.hpp"
+#include <boost/uuid/uuid.hpp>             // uuid class
+#include <boost/uuid/uuid_generators.hpp>  // generators
+#include <boost/uuid/uuid_io.hpp>          // streaming operators etc.

@@ -19,12 +19,9 @@ class group_user : private helpers::user_autorization {
 
   void init_commands(const helpers::handler_context& context);
 
-  void on_group_user_add(const helpers::handler_context& context,
-                         TgBot::Message::Ptr message);
-  void on_group_user_remove(const helpers::handler_context& context,
-                            TgBot::Message::Ptr message);
-  void on_group_leave(const helpers::handler_context& context,
-                      TgBot::Message::Ptr message);
+  void on_group_user_add(const helpers::handler_context& context, TgBot::Message::Ptr message);
+  void on_group_user_remove(const helpers::handler_context& context, TgBot::Message::Ptr message);
+  void on_group_leave(const helpers::handler_context& context, TgBot::Message::Ptr message);
 };
 
 }  // namespace ymsummorizer::tgbot::handlers

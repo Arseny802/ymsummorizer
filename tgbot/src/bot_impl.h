@@ -16,39 +16,40 @@
 
 namespace ymsummorizer::tgbot {
 
-  class bot_impl final: public handlers::user,
-                        public handlers::group,
-                        public handlers::group_playlist,
-                        public handlers::group_user {
+class bot_impl final : public handlers::user,
+                       public handlers::group,
+                       public handlers::group_playlist,
+                       public handlers::group_user {
 public:
-    using callback_cmd = std::function<ymsummorizer_callback_result::ptr(const user_interaction&)>;
+  using callback_cmd = std::function<ymsummorizer_callback_result::ptr(
+      const user_interaction &)>;
 
-    bot_impl(std::string token, storage::db_manager& db);
-    ~bot_impl();
+  bot_impl(std::string token, storage::db_manager &db);
+  ~bot_impl();
 
-    bot_impl() = delete;
-    bot_impl(const bot_impl&) = delete;
-    bot_impl(bot_impl&&) = delete;
-    bot_impl operator=(const bot_impl&) = delete;
-    bot_impl operator=(bot_impl&&) = delete;
+  bot_impl() = delete;
+  bot_impl(const bot_impl &) = delete;
+  bot_impl(bot_impl &&) = delete;
+  bot_impl operator=(const bot_impl &) = delete;
+  bot_impl operator=(bot_impl &&) = delete;
 
-    bool start();
-    bool stop();
+  bool start();
+  bool stop();
 
-    bool send_message(const std::string& chat_id, const std::string& text);
-    void set_callback_command(command_type ct, callback_cmd&& callback);
+  bool send_message(const std::string &chat_id, const std::string &text);
+  void set_callback_command(command_type ct, callback_cmd &&callback);
 
 private:
-    void on_non_command_message(TgBot::Message::Ptr message);
-    void on_unknown_command(TgBot::Message::Ptr message);
+  void on_non_command_message(TgBot::Message::Ptr message);
+  void on_unknown_command(TgBot::Message::Ptr message);
 
-    void init_commands();
+  void init_commands();
 
-    std::atomic_bool is_running_ = false;
-    std::string token_;
-    TgBot::Bot bot_;
-    storage::db_manager& db_;
-    helpers::usrcmd_callbck_cache usrcmd_callbck_cache_;
-  };
+  std::atomic_bool is_running_ = false;
+  std::string token_;
+  TgBot::Bot bot_;
+  storage::db_manager &db_;
+  helpers::usrcmd_callbck_cache usrcmd_callbck_cache_;
+};
 
 } // namespace ymsummorizer::tgbot

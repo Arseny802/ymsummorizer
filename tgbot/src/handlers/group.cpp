@@ -1,17 +1,18 @@
 #include "group.h"
-
 #include "pch.h"
+
 #include "tgbot/command_type.h"
 #include "tgbot/user_interaction.h"
 #include "tgbot/ymsummorizer_callback_result.h"
 
 namespace ymsummorizer::tgbot::handlers {
 
-group::group() {}
+group::group() {
+}
 group::~group() = default;
 
 void group::init_commands(const helpers::handler_context& context) {
-  AUTOLOG_TG
+  AUTOTRACE
 
   context.bot.getEvents().onCommand(
       "group_list",
@@ -24,9 +25,9 @@ void group::init_commands(const helpers::handler_context& context) {
       std::bind(&group::on_group_delete, this, context, std::placeholders::_1));
 }
 
-void group::on_group_list(const helpers::handler_context& context,
-                          TgBot::Message::Ptr message) {
-  AUTOMEASURE_TG
+void group::on_group_list(const helpers::handler_context& context, TgBot::Message::Ptr message) {
+  AUTOFLUSH_ALL
+  AUTOMEASURE
   if (!validate_user_command<command_type::group_list>(context, message)) {
     return;
   }
@@ -53,7 +54,8 @@ void group::on_group_list(const helpers::handler_context& context,
     std::stringstream ss;
     ss << "*Список групп*:\n\n";
     for (auto& group : group_list->groups) {
-      ss << "# *" << group.name << "* _" << group.id << "_" << "\n";
+      ss << "# *" << group.name << "* _" << group.id << "_"
+         << "\n";
       ss << "Пользователи: \n";
       for (auto& user_id : group.user_ids) {
         const auto user_it = group_list->filtered_users.find(user_id);
@@ -62,8 +64,7 @@ void group::on_group_list(const helpers::handler_context& context,
           continue;
         }
 
-        ss << " - _" << common::user::hide_spetial_chars(user_it->second.name)
-           << "_ (https://t.me/"
+        ss << " - _" << common::user::hide_spetial_chars(user_it->second.name) << "_ (https://t.me/"
            << common::user::hide_spetial_chars(user_it->second.login_tg) << ")"
            << "\n";
       }
@@ -72,32 +73,29 @@ void group::on_group_list(const helpers::handler_context& context,
 
     auto msg = ss.str();
     log()->debug(msg);
-    context.bot.getApi().sendMessage(message->chat->id, msg, nullptr, nullptr,
-                                     nullptr, "Markdown");
+    context.bot.getApi().sendMessage(message->chat->id, msg, nullptr, nullptr, nullptr, "Markdown");
 
   } else {
-    context.bot.getApi().sendMessage(message->chat->id,
-                                     "Не удалось получить список групп.");
+    context.bot.getApi().sendMessage(message->chat->id, "Не удалось получить список групп.");
   }
 }
 
-void group::on_group_create(const helpers::handler_context& context,
-                            TgBot::Message::Ptr message) {
-  AUTOMEASURE_TG
+void group::on_group_create(const helpers::handler_context& context, TgBot::Message::Ptr message) {
+  AUTOFLUSH_ALL
+  AUTOMEASURE
   if (!validate_user_command<command_type::group_create>(context, message)) {
     return;
   }
 
   if (context.cmd_cache.command_queue_clear(message->from->username)) {
     log()->warning("User {} is already in queue.", message->from->username);
-    context.bot.getApi().sendMessage(message->chat->id,
-                                     "Предыдущий запрос отклонён.");
+    context.bot.getApi().sendMessage(message->chat->id, "Предыдущий запрос отклонён.");
   }
 
-  context.bot.getApi().sendMessage(message->chat->id,
-                                   "Введите название группы:");
+  context.bot.getApi().sendMessage(message->chat->id, "Введите название группы:");
   context.cmd_cache.command_queue_emplace_next(
-      message->from->username, [this, &context](TgBot::Message::Ptr message) {
+      message->from->username,
+      [this, &context](TgBot::Message::Ptr message) {
         log()->info("User wrote group_create: '{}'.", message->text.c_str());
 
         user_interaction ui;
@@ -107,9 +105,8 @@ void group::on_group_create(const helpers::handler_context& context,
         ymsummorizer_callback_result::ptr result =
             context.cmd_cache.callback_commands[command_type::group_create](ui);
         if (result->ok) {
-          context.bot.getApi().sendMessage(
-              message->chat->id,
-              fmt::format("Группа '{}' создана.", message->text));
+          context.bot.getApi().sendMessage(message->chat->id,
+                                           fmt::format("Группа '{}' создана.", message->text));
         } else {
           context.bot.getApi().sendMessage(
               message->chat->id,
@@ -120,23 +117,22 @@ void group::on_group_create(const helpers::handler_context& context,
       });
 }
 
-void group::on_group_delete(const helpers::handler_context& context,
-                            TgBot::Message::Ptr message) {
-  AUTOMEASURE_TG
+void group::on_group_delete(const helpers::handler_context& context, TgBot::Message::Ptr message) {
+  AUTOFLUSH_ALL
+  AUTOMEASURE
   if (!validate_user_command<command_type::group_delete>(context, message)) {
     return;
   }
 
   if (context.cmd_cache.command_queue_clear(message->from->username)) {
     log()->warning("User {} is already in queue.", message->from->username);
-    context.bot.getApi().sendMessage(message->chat->id,
-                                     "Предыдущий запрос отклонён.");
+    context.bot.getApi().sendMessage(message->chat->id, "Предыдущий запрос отклонён.");
   }
 
-  context.bot.getApi().sendMessage(message->chat->id,
-                                   "Введите название группы:");
+  context.bot.getApi().sendMessage(message->chat->id, "Введите название группы:");
   context.cmd_cache.command_queue_emplace_next(
-      message->from->username, [this, &context](TgBot::Message::Ptr message) {
+      message->from->username,
+      [this, &context](TgBot::Message::Ptr message) {
         log()->info("User wrote group_delete: '{}'.", message->text.c_str());
 
         user_interaction ui;
@@ -146,9 +142,8 @@ void group::on_group_delete(const helpers::handler_context& context,
         ymsummorizer_callback_result::ptr result =
             context.cmd_cache.callback_commands[command_type::group_delete](ui);
         if (result->ok) {
-          context.bot.getApi().sendMessage(
-              message->chat->id,
-              fmt::format("Группа '{}' удалена.", message->text));
+          context.bot.getApi().sendMessage(message->chat->id,
+                                           fmt::format("Группа '{}' удалена.", message->text));
         } else {
           context.bot.getApi().sendMessage(
               message->chat->id,

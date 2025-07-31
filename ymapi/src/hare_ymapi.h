@@ -3,11 +3,10 @@
 #define PROJECT_NAME "ymsummorizer"
 #endif
 #ifndef MODULE_NAME
-#define MODULE_NAME "storage.example"
+#define MODULE_NAME "ymapi"
 #endif
 #include "hare/hare.hpp"
 
-namespace ymsummorizer::storage::example {
-void initialize_logging();
+namespace ymsummorizer::ymapi {
 hare::hlogger_ptr log();
-}  // namespace ymsummorizer::storage::example
+}  // namespace ymsummorizer::ymapi

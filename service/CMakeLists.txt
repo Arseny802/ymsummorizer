@@ -29,6 +29,7 @@ target_include_directories(${PROJECT_NAME}
 set_target_properties(${PROJECT_NAME} PROPERTIES
   CXX_STANDARD 20
   CXX_STANDARD_REQUIRED ON
+  OUTPUT_NAME "ymsummorizer-${PROJECT_VERSION}" 
 )
 
 add_subdirectory(tests)
