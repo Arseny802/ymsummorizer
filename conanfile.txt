@@ -2,7 +2,7 @@
 magic_enum/0.9.6      # Advanced enum parsing
 boost/1.83.0          # Needed for tgbot, cpr in some rpofiles
 cpr/1.11.1            # CURL reqiests simlified
-tgbot/1.8             # Telegram bot simlified API
+tgbot/1.9.1           # Telegram bot simlified API
 sqlite3/3.46.0        # Needed for static info storage
 nlohmann_json/3.11.3  # Needed for external API communication
 libcurl/8.9.1         # Needed for tgbot, cpr in some rpofiles (?)

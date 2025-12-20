@@ -1,6 +1,7 @@
 cmake_minimum_required(VERSION 3.23)
 project(ymsummorizer.storage VERSION 0.0.1)
 
+find_package(Boost CONFIG REQUIRED)
 find_package(SQLite3 CONFIG REQUIRED)
 find_package(nlohmann_json CONFIG REQUIRED)
 
@@ -29,7 +30,9 @@ target_link_libraries(${PROJECT_NAME} PUBLIC
   ymsummorizer.common
   ${PROJECT_NAME}.resources
   nlohmann_json::nlohmann_json
+  Boost::boost
   SQLite::SQLite3
+  $<$<PLATFORM_ID:Windows>:bcrypt>  # for boost UUID
 )
 
 target_include_directories(${PROJECT_NAME}
