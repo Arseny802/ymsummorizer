@@ -55,7 +55,7 @@ bot_impl::bot_impl(storage::db_manager&& db)
 }
 
 bot_impl::~bot_impl() {
-  AUTOTRACE
+  AUTOTRACE;
 }
 
 void bot_impl::main() {

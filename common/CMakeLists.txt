@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.23)
-project(ymsummorizer.common VERSION 0.0.1)
+project(ymsummorizer.common VERSION ${CMAKE_PROJECT_VERSION})
 
 find_package(magic_enum REQUIRED)
 find_package(Boost REQUIRED)
@@ -30,7 +30,6 @@ target_link_libraries(${PROJECT_NAME} PUBLIC
   ${OS_SPECIFIC_LIBS}
   magic_enum::magic_enum
   Boost::boost
-  #bcrypt
 )
 
 target_include_directories(${PROJECT_NAME}
@@ -48,4 +47,23 @@ set_target_properties(${PROJECT_NAME} PROPERTIES
 
 add_subdirectory(tests)
 
-configure_file(version.h.in ${PROJECT_SOURCE_DIR}/include/common/version.h)
+configure_file(version.h.in ${PROJECT_SOURCE_DIR}/include/common/version.current.h)
+
+execute_process(COMMAND ${CMAKE_COMMAND} -E compare_files 
+  ${PROJECT_SOURCE_DIR}/include/common/version.current.h
+  ${PROJECT_SOURCE_DIR}/include/common/version.h
+  RESULT_VARIABLE VersionChanged
+)
+if(VersionChanged EQUAL 0)
+  message(STATUS "Version was NOT changed")
+elseif(VersionChanged EQUAL 1)
+  message(STATUS "Project version changed - updating version.h")
+  file(REMOVE ${PROJECT_SOURCE_DIR}/include/common/version.h)
+  file(RENAME 
+    ${PROJECT_SOURCE_DIR}/include/common/version.current.h
+    ${PROJECT_SOURCE_DIR}/include/common/version.h 
+  )
+else()
+  message(WARNING "Error while comparing version.h files!")
+endif()
+
