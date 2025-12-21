@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.23)
-project(ymsummorizer.service VERSION 0.0.1)
+project(ymsummorizer.service VERSION ${CMAKE_PROJECT_VERSION})
 
 add_executable(${PROJECT_NAME}
   src/handlers/group_playlist.cpp

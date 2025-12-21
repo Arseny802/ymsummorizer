@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.23)
-project(ymsummorizer.ymapi VERSION 0.0.1)
+project(ymsummorizer.ymapi VERSION ${CMAKE_PROJECT_VERSION})
 
 find_package(ZLIB)
 find_package(CURL)

@@ -17,19 +17,12 @@ target_precompile_headers(${PROJECT_NAME}
   PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/src/pch.h
 )
 
-set(OS_SPECIFIC_LIBS "")
-if (WIN32)
-  set(OS_SPECIFIC_LIBS
-    ws2_32
-    wsock32
-  )
-endif()
-
 target_link_libraries(${PROJECT_NAME} PUBLIC
   hare
-  ${OS_SPECIFIC_LIBS}
   magic_enum::magic_enum
   Boost::boost
+  $<$<PLATFORM_ID:Windows>:ws2_32>
+  $<$<PLATFORM_ID:Windows>:wsock32>
 )
 
 target_include_directories(${PROJECT_NAME}
