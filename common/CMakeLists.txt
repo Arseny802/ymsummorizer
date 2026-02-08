@@ -40,7 +40,10 @@ set_target_properties(${PROJECT_NAME} PROPERTIES
 
 add_subdirectory(tests)
 
-configure_file(version.h.in ${PROJECT_SOURCE_DIR}/include/common/version.current.h)
+configure_file(version.h.in 
+  ${PROJECT_SOURCE_DIR}/include/common/version.current.h
+  NEWLINE_STYLE LF
+)
 
 execute_process(COMMAND ${CMAKE_COMMAND} -E compare_files 
   ${PROJECT_SOURCE_DIR}/include/common/version.current.h
