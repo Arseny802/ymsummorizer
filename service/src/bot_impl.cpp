@@ -1,7 +1,6 @@
 #include "pch.h"
 
 #include "bot_impl.h"
-#include "hare/hare.hpp"
 
 namespace ymsummorizer::service {
 
@@ -14,44 +13,24 @@ bot_impl::bot_impl(storage::db_manager&& db)
       bot_(db_) {
   AUTOTRACEFA
 
-  bot_.set_callback_command(tgbot::command_type::group_list,
-                            std::bind(&group::on_group_list, this, std::placeholders::_1));
-  bot_.set_callback_command(tgbot::command_type::group_create,
-                            std::bind(&group::on_group_create, this, std::placeholders::_1));
-  bot_.set_callback_command(tgbot::command_type::group_delete,
-                            std::bind(&group::on_group_delete, this, std::placeholders::_1));
+  connect_handler(tgbot::command_type::group_list, &group::on_group_list);
+  connect_handler(tgbot::command_type::group_create, &group::on_group_create);
+  connect_handler(tgbot::command_type::group_delete, &group::on_group_delete);
 
-  bot_.set_callback_command(tgbot::command_type::group_user_add,
-                            std::bind(&group_user::on_group_user_add, this, std::placeholders::_1));
-  bot_.set_callback_command(
-      tgbot::command_type::group_user_remove,
-      std::bind(&group_user::on_group_user_remove, this, std::placeholders::_1));
-  bot_.set_callback_command(tgbot::command_type::group_leave,
-                            std::bind(&group_user::on_group_leave, this, std::placeholders::_1));
+  connect_handler(tgbot::command_type::group_user_add, &group_user::on_group_user_add);
+  connect_handler(tgbot::command_type::group_user_remove, &group_user::on_group_user_remove);
+  connect_handler(tgbot::command_type::group_leave, &group_user::on_group_leave);
 
-  bot_.set_callback_command(
-      tgbot::command_type::group_playslit_list,
-      std::bind(&group_playlist::on_group_playslit_list, this, std::placeholders::_1));
-  bot_.set_callback_command(
-      tgbot::command_type::group_playslit_view,
-      std::bind(&group_playlist::on_group_playslit_view, this, std::placeholders::_1));
-  bot_.set_callback_command(
-      tgbot::command_type::group_playslit_add,
-      std::bind(&group_playlist::on_group_playslit_add, this, std::placeholders::_1));
-  bot_.set_callback_command(
-      tgbot::command_type::group_playslit_remove,
-      std::bind(&group_playlist::on_group_playslit_remove, this, std::placeholders::_1));
+  connect_handler(tgbot::command_type::group_playslit_list, &group_playlist::on_group_playslit_list);
+  connect_handler(tgbot::command_type::group_playslit_view, &group_playlist::on_group_playslit_view);
+  connect_handler(tgbot::command_type::group_playslit_add, &group_playlist::on_group_playslit_add);
+  connect_handler(tgbot::command_type::group_playslit_remove, &group_playlist::on_group_playslit_remove);
 
-  bot_.set_callback_command(tgbot::command_type::start,
-                            std::bind(&user::on_start, this, std::placeholders::_1));
-  bot_.set_callback_command(tgbot::command_type::user_token_add,
-                            std::bind(&user::on_user_token_add, this, std::placeholders::_1));
-  bot_.set_callback_command(tgbot::command_type::user_token_erase,
-                            std::bind(&user::on_user_token_erase, this, std::placeholders::_1));
-  // bot_.set_callback_command(tgbot::command_type::token_edit,
-  //                           std::bind(&user::on_token_edit, this, std::placeholders::_1));
-  bot_.set_callback_command(tgbot::command_type::user_view,
-                            std::bind(&user::on_user_view, this, std::placeholders::_1));
+  connect_handler(tgbot::command_type::start, &user::on_start);
+  connect_handler(tgbot::command_type::user_token_add, &user::on_user_token_add);
+  connect_handler(tgbot::command_type::user_token_erase, &user::on_user_token_erase);
+  // connect(tgbot::command_type::token_edit, &user::on_token_edit);
+  connect_handler(tgbot::command_type::user_view, &user::on_user_view);
 }
 
 bot_impl::~bot_impl() {
@@ -76,5 +55,10 @@ void bot_impl::main() {
     std::this_thread::sleep_for(std::chrono::seconds(counter_step));
     log()->debug("Already running for {} second(s).", (counter_step * counter++));
   }
+}
+
+template<typename Handler>
+void bot_impl::connect_handler(tgbot::command_type cmd, Handler function) {
+  bot_.set_callback_command(cmd, std::bind(function, this, std::placeholders::_1));
 }
 }  // namespace ymsummorizer::service

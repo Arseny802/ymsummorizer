@@ -19,6 +19,9 @@ class bot_impl : public handlers::user,
   void main();
 
  private:
+  template<typename Handler>
+  void connect_handler(tgbot::command_type cmd, Handler function);
+
   storage::db_manager db_;
   tgbot::ymsummorizer_bot bot_;
 };
