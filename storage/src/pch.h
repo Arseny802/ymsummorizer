@@ -3,7 +3,16 @@
 // Standard libraries
 #include "common/common_pch.h"
 
-#include "hare_storage.h"
+#ifndef PROJECT_NAME
+#  define PROJECT_NAME "ymsummorizer"
+#endif
+#ifndef MODULE_NAME
+#  define MODULE_NAME "storage"
+#endif
+#include <hare/hare.hpp>
+namespace ymsummorizer::storage {
+MAKE_GETTER(log)
+}  // namespace ymsummorizer::storage
 
 // Local files
 #include <sqlite3.h>

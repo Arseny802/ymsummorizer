@@ -1,5 +1,6 @@
 #pragma once
 #include "common/common.hpp"
+#include "storage/db_manager.h"
 
 namespace ymsummorizer::service::maintenance {
 class task final {
@@ -9,10 +10,8 @@ class task final {
   void run() noexcept;
 
  private:
-  std::vector<common::playlist> get_playlists_info(
-      const std::vector<common::playlist::yandex>& yandex_users) noexcept;
-  std::vector<common::playlist_track> get_playlist_tracks(
-      const std::vector<common::playlist>& playlists) noexcept;
+  std::vector<common::playlist> get_playlists_info(const std::vector<common::playlist::yandex>& yandex_users) noexcept;
+  std::vector<common::playlist_track> get_playlist_tracks(const std::vector<common::playlist>& playlists) noexcept;
 
   storage::db_manager& db_;
 };

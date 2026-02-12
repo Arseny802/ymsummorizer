@@ -8,9 +8,9 @@ find_package(nlohmann_json CONFIG REQUIRED)
 
 add_library(${PROJECT_NAME} STATIC
   src/client.cpp
-  src/hare_ymapi.cpp
   src/playlist.cpp
   src/pch.cpp
+  src/ymapi.cpp
 )
 
 target_precompile_headers(${PROJECT_NAME}

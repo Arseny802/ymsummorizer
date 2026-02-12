@@ -18,8 +18,8 @@ add_library(${PROJECT_NAME} STATIC
   src/db/fabric.cpp
   src/db/manager_base.cpp
   src/db_manager.cpp
-  src/hare_storage.cpp
   src/pch.cpp
+  src/storage.cpp
 )
 
 target_precompile_headers(${PROJECT_NAME}

@@ -6,7 +6,8 @@
 namespace ymsummorizer::storage {
 
 db_manager::db_manager(storage_types storage_type, std::string db_name)
-    : storage_type_(storage_type), db_name_(std::move(db_name)) {
+    : storage_type_(storage_type),
+      db_name_(std::move(db_name)) {
   AUTOTRACE;
 }
 
@@ -14,10 +15,9 @@ db_manager::~db_manager() {
   AUTOTRACE;
 }
 
-db_manager::db_manager(db_manager&& other)
-    : storage_type_(other.storage_type_), db_name_(std::move(other.db_name_)) {
+db_manager::db_manager(db_manager&& other): storage_type_(other.storage_type_), db_name_(std::move(other.db_name_)) {
   AUTOTRACE
-  manager_pimpl = std::move(manager_pimpl);
+  // manager_pimpl = std::move(manager_pimpl);
   // connected_ = std::exchange(connected_, false);
   connected_.store(false, std::memory_order_release);
 }
@@ -47,7 +47,7 @@ bool db_manager::connect() {
   }
 
   if (const auto settings = manager_pimpl->get_stored_settings(); settings.has_value()) {
-    for (const auto& [key, value] : settings.value()) {
+    for (const auto& [key, value]: settings.value()) {
       log()->info("Got setting ['{}' => '{}'].", key, value);
       settings_[key] = value;
     }

@@ -14,8 +14,8 @@ add_library(${PROJECT_NAME} STATIC
   src/helpers/usrcmd_callbck_cache.cpp
   src/bot_impl.cpp
   src/ymsummorizer_bot.cpp
-  src/hare_tgbot.cpp
   src/pch.cpp
+  src/tgbot.cpp
 )
   
 target_precompile_headers(${PROJECT_NAME}
