@@ -37,7 +37,10 @@ bool db_manager::connect() {
     return true;
   }
 
-  manager_pimpl = db::fabric::create(storage_type_);
+  if (!manager_pimpl) {
+    manager_pimpl = db::fabric::create(storage_type_);
+  }
+
   if (!manager_pimpl->connect(db_name_)) {
     return false;
   }

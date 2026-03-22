@@ -8,6 +8,7 @@ add_library(${PROJECT_NAME} STATIC
   src/group.cpp
   src/playlist.cpp
   src/playlist_track.cpp
+  src/setting.cpp
   src/user.cpp
   src/pch.cpp
 )

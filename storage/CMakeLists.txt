@@ -49,4 +49,7 @@ set_target_properties(${PROJECT_NAME} PROPERTIES
 )
 
 add_subdirectory(example)
-add_subdirectory(tests)
+
+setup_project_tests(
+  SOURCES_PATH ${CMAKE_CURRENT_SOURCE_DIR}/tests
+)

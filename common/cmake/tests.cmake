@@ -41,8 +41,8 @@ function(setup_project_tests)
 
   # Связать с библиотекой common и GTest
   target_link_libraries(${ARG_NAME} PRIVATE
-    ymsummorizer.common
-    GTest::gtest_main
+    ${PROJECT_NAME}
+    GTest::gmock_main
   )
 
   # Установить стандарт C++20
@@ -50,6 +50,8 @@ function(setup_project_tests)
     CXX_STANDARD 20
     CXX_STANDARD_REQUIRED ON
   )
+
+  target_compile_definitions(${ARG_NAME} PRIVATE UNIT_TEST)
 
   # Регистрация теста в CTest
   add_test(NAME ${ARG_NAME} COMMAND ${ARG_NAME})
