@@ -38,7 +38,9 @@ set_target_properties(${PROJECT_NAME} PROPERTIES
   CXX_STANDARD_REQUIRED ON
 )
 
-add_subdirectory(tests)
+setup_project_tests(
+  SOURCES_PATH ${CMAKE_CURRENT_SOURCE_DIR}/tests
+)
 
 configure_file(version.h.in 
   ${PROJECT_SOURCE_DIR}/include/common/version.current.h
