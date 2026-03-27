@@ -3,13 +3,15 @@
 #include "manager.h"
 
 namespace ymsummorizer::storage::db::sqlite {
-manager::manager() {
+manager::manager(): db_handler_(nullptr) {
   AUTOTRACE;
 }
 
 manager::~manager() {
   AUTOTRACE
-  sqlite3_close(db_handler_);
+  if (db_handler_) {
+    sqlite3_close(db_handler_);
+  }
 }
 
 bool manager::connect(const std::string& db_name) {
@@ -85,10 +87,7 @@ bool manager::execute_query(const char* sql_query) {
       return true;
     }
 
-    log()->error("execute_query[{0}] failed, exit code {1}: {2}",
-                 current_query_id,
-                 exit,
-                 messaggeError);
+    log()->error("execute_query[{0}] failed, exit code {1}: {2}", current_query_id, exit, messaggeError);
     sqlite3_free(messaggeError);
   } catch (const std::exception& e) {
     log()->error("execute_query[{0}] failed: {1}", current_query_id, e.what());
