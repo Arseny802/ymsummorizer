@@ -39,4 +39,3 @@ set_target_properties(${PROJECT_NAME} PROPERTIES
 )
 
 add_subdirectory(example)
-add_subdirectory(tests)

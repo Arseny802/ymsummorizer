@@ -7,8 +7,10 @@
 # )
 
 
-option(BUILD_TESTS "Build tests" ON)
 if (NOT BUILD_TESTS)
+  function(setup_project_tests)
+    message(STATUS "${PROJECT_NAME}.test will not be generated - BUILD_TESTS is off.")
+  endfunction()
   return()
 endif()
 

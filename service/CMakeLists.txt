@@ -31,4 +31,3 @@ set_target_properties(${PROJECT_NAME} PROPERTIES
   OUTPUT_NAME "ymsummorizer-${PROJECT_VERSION}" 
 )
 
-add_subdirectory(tests)

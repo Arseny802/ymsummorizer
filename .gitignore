@@ -10,6 +10,9 @@ config.json
 .[vV][sS][cC]ode*
 CMakeLists.txt.user
 
+# AI files
+KODA.md
+
 # Prerequisites
 *.d
 

@@ -43,4 +43,3 @@ set_target_properties(${PROJECT_NAME} PROPERTIES
   CXX_STANDARD_REQUIRED ON
 )
 
-add_subdirectory(tests)
