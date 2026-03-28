@@ -12,7 +12,7 @@ if (NOT BUILD_TESTS)
     message(STATUS "${PROJECT_NAME}.test will not be generated - BUILD_TESTS is off.")
   endfunction()
   return()
-endif()
+endif(NOT BUILD_TESTS)
 
 include(CTest)
 
@@ -38,6 +38,8 @@ function(setup_project_tests)
     file(GLOB_RECURSE ARG_SOURCES "${ARG_SOURCES_PATH}/*.cpp")
   endif()
 
+  message(DEBUG "${ARG_NAME} project of tests has files: ${ARG_SOURCES}")
+
   # Создать исполняемый файл тестов
   add_executable(${ARG_NAME} ${ARG_SOURCES})
 
@@ -57,8 +59,14 @@ function(setup_project_tests)
 
   # Регистрация теста в CTest
   add_test(NAME ${ARG_NAME} COMMAND ${ARG_NAME})
-
   message(STATUS "Configured test: ${ARG_NAME}")
 
-
+  if (RUN_TESTS)
+    add_custom_command(
+      TARGET ${ARG_NAME}
+      POST_BUILD
+      COMMAND ctest -C $<CONFIGURATION> --output-on-failure)
+  else()
+    message(STATUS "Test run disabled - ${ARG_NAME} tests will not ve created and executed.")
+  endif(RUN_TESTS)
 endfunction()
