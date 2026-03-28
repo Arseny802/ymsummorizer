@@ -13,6 +13,11 @@ cmrc_add_resource_library(${PROJECT_NAME}.resources
 )
 
 add_library(${PROJECT_NAME} STATIC
+  src/data/administrators.cpp
+  src/data/bot_info.cpp
+  src/data/generator.cpp
+  src/data/groups.cpp
+  src/data/users.cpp
   src/db/sqlite/manager.cpp
   src/db/cfg/manager.cpp
   src/db/fabric.cpp

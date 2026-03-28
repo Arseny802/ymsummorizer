@@ -1,5 +1,6 @@
 #include "pch.h"
 
+#include "data/generator.h"
 #include "db/fabric.h"
 #include "storage/db_manager.h"
 
@@ -48,6 +49,9 @@ bool db_manager::connect() {
   if (!manager_pimpl->create_db()) {
     return false;
   }
+
+  data::generator generator(manager_pimpl);
+  if (!generator.generate_all()) { }
 
   if (const auto settings = manager_pimpl->get_stored_settings(); settings.has_value()) {
     for (const auto& [key, value]: settings.value()) {

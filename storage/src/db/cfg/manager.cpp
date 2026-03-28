@@ -19,8 +19,7 @@ bool manager::connect(const std::string& cfg_file_name) {
   cfg_file_path_ = std::filesystem::path(cfg_file_name);
   log()->info("Opening config file '{0}'...", cfg_file_name);
   if (!std::filesystem::exists(cfg_file_path_)) {
-    log()->warning("Config file '{0}' not exists! Create basic configuration before use.",
-                   cfg_file_name);
+    log()->warning("Config file '{0}' not exists! Create basic configuration before use.", cfg_file_name);
 
     // That's a file, so we can just create another one and fill it with default values
     return true;
@@ -47,58 +46,7 @@ bool manager::create_db() {
   }
 
   try {
-    if (!data_->contains("bot_info")) {
-      (*data_)["bot_info"] = nlohmann::json::object();
-      (*data_)["bot_info"]["token"] = "INSERT_YOUR_BOT_TOKEN_HERE";
-    }
-
-    if (!data_->contains("users")) {
-      (*data_)["users"] = nlohmann::json::array();
-    }
-    if ((*data_)["users"].size() == 0) {
-      nlohmann::json user;
-      user["id"] = boost::uuids::to_string(boost::uuids::random_generator()());
-      user["name"] = "User01_name";
-      user["login_tg"] = "User01_login_tg";
-      user["login_yandex"] = "User01_login_yandex";
-      user["token"] = "User01_yandex_token";
-      (*data_)["users"].emplace_back(std::move(user));
-    }
-
-    if ((*data_)["users"].size() == 1) {
-      nlohmann::json user;
-      user["id"] = boost::uuids::to_string(boost::uuids::random_generator()());
-      user["name"] = "User02_name";
-      user["login_tg"] = "User02_login_tg";
-      user["login_yandex"] = "User02_login_yandex";
-      user["token"] = "User02_yandex_token";
-      (*data_)["users"].emplace_back(std::move(user));
-    }
-
-    if (!data_->contains("groups")) {
-      (*data_)["groups"] = nlohmann::json::array();
-    }
-    if ((*data_)["groups"].size() == 0) {
-      nlohmann::json group;
-      group["id"] = boost::uuids::to_string(boost::uuids::random_generator()());
-      group["name"] = "DefaultGoup";
-      group["users"] = nlohmann::json::array();
-      group["users"].emplace_back((*data_)["users"][0]["id"]);
-      group["users"].emplace_back((*data_)["users"][1]["id"]);
-      (*data_)["groups"].emplace_back(std::move(group));
-    }
-
-    if (!data_->contains("admins")) {
-      (*data_)["admins"] = nlohmann::json::array();
-      (*data_)["admins"].emplace_back((*data_)["users"][0]["id"]);
-    }
-
-    if (!data_->contains("superadmins")) {
-      (*data_)["superadmins"] = nlohmann::json::array();
-      (*data_)["superadmins"].emplace_back((*data_)["users"][0]["id"]);
-    }
-
-    save_data();
+    save_data();  // save empty file
     return true;
   } catch (const std::exception& e) {
     log()->error("Error: {0}", e.what());
@@ -184,7 +132,7 @@ std::vector<common::user> manager::get_stored_users() {
   assert(data_->contains("users") && !(*data_)["users"].empty() && "No stored users!");
 
   std::vector<common::user> result;
-  for (const auto& user : (*data_)["users"]) {
+  for (const auto& user: (*data_)["users"]) {
     common::user current_user;
     current_user.id = user["id"];
     current_user.name = user["name"];
@@ -202,11 +150,11 @@ std::vector<common::group> manager::get_stored_groups() {
   assert(data_->contains("groups") && !(*data_)["groups"].empty() && "No stored groups!");
 
   std::vector<common::group> result;
-  for (const auto& group : (*data_)["groups"]) {
+  for (const auto& group: (*data_)["groups"]) {
     common::group current_group;
     current_group.id = group["id"];
     current_group.name = group["name"];
-    for (const auto& user : (*data_)["users"]) {
+    for (const auto& user: (*data_)["users"]) {
       current_group.user_ids.emplace_back(user.at("id"));
     }
 
@@ -269,7 +217,7 @@ std::vector<std::string> manager::get_admin_ids() {
   assert(data_->contains("admins") && !(*data_)["admins"].empty() && "No stored admins!");
 
   std::vector<std::string> result;
-  for (const auto& user : (*data_)["admins"]) {
+  for (const auto& user: (*data_)["admins"]) {
     result.emplace_back(user);
   }
   return result;
@@ -278,11 +226,10 @@ std::vector<std::string> manager::get_admin_ids() {
 std::vector<std::string> manager::get_superadmin_ids() {
   AUTOTRACE
   assert(data_ && "Data is empty!");
-  assert(data_->contains("superadmins") && !(*data_)["superadmins"].empty() &&
-         "No stored superadmins!");
+  assert(data_->contains("superadmins") && !(*data_)["superadmins"].empty() && "No stored superadmins!");
 
   std::vector<std::string> result;
-  for (const auto& user : (*data_)["superadmins"]) {
+  for (const auto& user: (*data_)["superadmins"]) {
     result.emplace_back(user);
   }
   return result;
@@ -325,7 +272,7 @@ std::vector<common::playlist> manager::get_group_playlists(const std::string& gr
   assert(data_->contains("groups") && !(*data_)["groups"].empty() && "No stored groups!");
 
   std::vector<common::playlist> result;
-  for (const auto& current_group : (*data_)["groups"]) {
+  for (const auto& current_group: (*data_)["groups"]) {
     std::string current_group_id = current_group.contains("id") ? current_group["id"] : "";
     if (!group_id.empty() && current_group_id != group_id) {
       continue;
@@ -333,16 +280,14 @@ std::vector<common::playlist> manager::get_group_playlists(const std::string& gr
 
     if (!current_group.contains("playlists") || current_group["playlists"].empty()) {
       std::string current_group_name = current_group.contains("name") ? current_group["name"] : "";
-      log()->warning("No stored playlists in group '{}' (name: '{}')!",
-                     current_group_id,
-                     current_group_name);
+      log()->warning("No stored playlists in group '{}' (name: '{}')!", current_group_id, current_group_name);
       if (group_id.empty()) {
         continue;
       }
       return result;
     }
 
-    for (const auto& playlist : current_group["playlists"]) {
+    for (const auto& playlist: current_group["playlists"]) {
       if (!playlist_id.empty() && playlist["id"] != playlist_id) {
         continue;
       }
@@ -351,12 +296,10 @@ std::vector<common::playlist> manager::get_group_playlists(const std::string& gr
       current_playlist.id = playlist["id"];
       current_playlist.name = playlist["name"];
 
-      for (const auto& yandex_user : playlist["yandex"]) {
+      for (const auto& yandex_user: playlist["yandex"]) {
         common::playlist::yandex current_playlist_yandex;
         if (!yandex_user.contains("user_id") || !yandex_user.contains("kind")) {
-          log()->error("Ivalid yandex user in playlist '{}' (name: '{}')!",
-                       current_playlist.id,
-                       current_playlist.name);
+          log()->error("Ivalid yandex user in playlist '{}' (name: '{}')!", current_playlist.id, current_playlist.name);
           continue;
         }
 
@@ -378,7 +321,7 @@ bool manager::add_playlist(const common::playlist& playlist) {
   assert(data_ && "Data is empty!");
   assert(data_->contains("groups") && !(*data_)["groups"].empty() && "No stored groups!");
 
-  for (auto& current_group : (*data_)["groups"]) {
+  for (auto& current_group: (*data_)["groups"]) {
     std::string current_group_id = current_group.contains("id") ? current_group["id"] : "";
     if (current_group_id != playlist.group_id) {
       continue;
@@ -400,8 +343,7 @@ bool manager::remove_playlist(const common::playlist& playlist) {
   return false;
 }
 
-bool manager::add_playlist_yandex(const common::playlist& playlist,
-                                  const common::playlist::yandex& playlist_yandex) {
+bool manager::add_playlist_yandex(const common::playlist& playlist, const common::playlist::yandex& playlist_yandex) {
   AUTOTRACE
   assert(!playlist.group_id.empty() && "playlist.group_id is empty!");
   assert(data_ && "Data is empty!");
