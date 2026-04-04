@@ -1,24 +1,25 @@
 #pragma once
 #include <gmock/gmock.h>
-#include <gtest/gtest.h>
 
-#include "../db_manager.h"
+#include "../include/storage/types.h"
+#include "../src/db/manager_base.h"
+#include "common/common.hpp"
 
-namespace ymsummorizer::storage::mocs {
+namespace ymsummorizer::storage {
 
-class db_manager : protected ymsummorizer::storage::db_manager {
+class db_manager_mock final : public db::manager_base {
  public:
-  db_manager(storage_types storage_type, std::string db_name)
-      : ymsummorizer::storage::db_manager(storage_type, std::move(db_name)) { }
-  ~db_manager();
+  db_manager_mock() = default;
+  ~db_manager_mock() = default;
 
   // Мок-методы для connect/flash
-  MOCK_METHOD(bool, connect, (), (override));
+  MOCK_METHOD(bool, connect, (const std::string&), (override));
   MOCK_METHOD(bool, flash, (), (override));
+  MOCK_METHOD(bool, create_db, (), (override));
 
   // Мок-методы для settings
-  MOCK_METHOD(std::string, get_stored_setting_string_key, (const std::string&, std::string), (override));
-  MOCK_METHOD(std::string, get_stored_setting_setting, (common::setting&, std::string), (override));
+  MOCK_METHOD(bool, get_stored_setting, (common::setting&), (override));
+  MOCK_METHOD(std::optional<std::vector<common::setting>>, get_stored_settings, (), (override));
   MOCK_METHOD(bool, set_stored_setting, (const common::setting&), (override));
 
   // Мок-методы для bot_info
@@ -50,22 +51,6 @@ class db_manager : protected ymsummorizer::storage::db_manager {
   MOCK_METHOD(bool, remove_playlist, (const common::playlist&), (override));
   MOCK_METHOD(bool, add_playlist_yandex, (const common::playlist&, const common::playlist::yandex&), (override));
   MOCK_METHOD(bool, remove_playlist_yandex, (const common::playlist&, const common::playlist::yandex&), (override));
-
-  // Делегаты для упрощённого доступа (wrapper-методы)
-  // Эти методы вызывают соответствующие mock-методы с корректной сигнатурой
-
-  std::string get_stored_setting(const std::string& key, std::string default_value = std::string()) override {
-    return get_stored_setting_string_key(key, std::move(default_value));
-  }
-
-  std::string get_stored_setting(common::setting& setting, std::string default_value = std::string()) override {
-    return get_stored_setting_setting(setting, std::move(default_value));
-  }
-
-  std::vector<common::playlist> get_group_playlists(const std::string& group_id = "",
-                                                    const std::string& playlist_id = "") override {
-    return get_group_playlists(group_id, playlist_id);
-  }
 };
 
-}  // namespace ymsummorizer::storage::mocs
+}  // namespace ymsummorizer::storage

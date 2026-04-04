@@ -18,6 +18,7 @@ class manager_base;
 class db_manager {
  public:
   db_manager(storage_types storage_type, std::string db_name);
+  db_manager(std::shared_ptr<db::manager_base> impl);
   ~db_manager();
 
   db_manager(const db_manager&) = delete;

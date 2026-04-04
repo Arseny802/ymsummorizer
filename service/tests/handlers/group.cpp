@@ -1,5 +1,5 @@
 #include "handlers/group.h"
-#include "storage/mocs/db_manager.h"
+#include "../mocs/dbmoc.hpp"
 #include "tgbot/user_interaction.h"
 #include "tgbot/ymsummorizer_callback_result.h"
 #include <gtest/gtest.h>
@@ -13,27 +13,32 @@ class GroupHandlerTest : public ::testing::Test {
  protected:
   void SetUp() override {
     log()->set_level(hare::hlevels::off);
-    mock_db_ = std::make_unique<storage::mocs::db_manager>(storage::storage_types::sqlite3, "test_db");
-    handler_ = std::make_unique<handlers::group>(*mock_db_);
+    mock_db_impl_ = std::make_shared<storage::db_manager_mock>();
+
+    auto impl = static_pointer_cast<storage::db::manager_base>(mock_db_impl_);
+    db_manager_ = std::make_unique<storage::db_manager>(impl);
+    handler_ = std::make_unique<handlers::group>(*db_manager_);
   }
 
   void TearDown() override {
     handler_.reset();
-    mock_db_.reset();
+    mock_db_impl_.reset();
+    db_manager_.reset();
   }
 
-  std::unique_ptr<storage::mocs::db_manager> mock_db_;
+  std::shared_ptr<storage::db_manager_mock> mock_db_impl_;
+  std::unique_ptr<storage::db_manager> db_manager_;
   std::unique_ptr<handlers::group> handler_;
 };
 
 TEST_F(GroupHandlerTest, Constructor) {
-  ON_CALL(*mock_db_, connect()).WillByDefault(Return(true));
+  ON_CALL(*mock_db_impl_, connect(testing::_)).WillByDefault(Return(true));
   EXPECT_NE(handler_, nullptr);
 }
 
 TEST_F(GroupHandlerTest, OnGroupListEmpty) {
-  ON_CALL(*mock_db_, get_stored_groups()).WillByDefault(Return(std::vector<common::group>{}));
-  ON_CALL(*mock_db_, get_stored_users()).WillByDefault(Return(std::vector<common::user>{}));
+  ON_CALL(*mock_db_impl_, get_stored_groups()).WillByDefault(Return(std::vector<common::group>{}));
+  ON_CALL(*mock_db_impl_, get_stored_users()).WillByDefault(Return(std::vector<common::user>{}));
 
   tgbot::user_interaction ui;
   ui.user_login_tg = "test_user";
@@ -61,8 +66,8 @@ TEST_F(GroupHandlerTest, OnGroupListWithGroups) {
   test_user.token = "test_token";
   users.push_back(test_user);
 
-  ON_CALL(*mock_db_, get_stored_groups()).WillByDefault(Return(groups));
-  ON_CALL(*mock_db_, get_stored_users()).WillByDefault(Return(users));
+  ON_CALL(*mock_db_impl_, get_stored_groups()).WillByDefault(Return(groups));
+  ON_CALL(*mock_db_impl_, get_stored_users()).WillByDefault(Return(users));
 
   tgbot::user_interaction ui;
   ui.user_login_tg = "test_user";
@@ -74,7 +79,7 @@ TEST_F(GroupHandlerTest, OnGroupListWithGroups) {
 }
 
 TEST_F(GroupHandlerTest, OnGroupCreateValidInput) {
-  ON_CALL(*mock_db_, add_group(testing::_)).WillByDefault(Return(true));
+  ON_CALL(*mock_db_impl_, add_group(testing::_)).WillByDefault(Return(true));
 
   tgbot::user_interaction ui;
   ui.arguments[tgbot::user_interaction::key_group_name] = "NewTestGroup";
@@ -97,7 +102,7 @@ TEST_F(GroupHandlerTest, OnGroupCreateEmptyName) {
 }
 
 TEST_F(GroupHandlerTest, OnGroupCreateWithSpecialChars) {
-  ON_CALL(*mock_db_, add_group(testing::_)).WillByDefault(Return(true));
+  ON_CALL(*mock_db_impl_, add_group(testing::_)).WillByDefault(Return(true));
 
   tgbot::user_interaction ui;
   ui.arguments[tgbot::user_interaction::key_group_name] = "Test_Group-123";
@@ -128,8 +133,8 @@ TEST_F(GroupHandlerTest, OnGroupListMultipleGroups) {
     groups.push_back(group);
   }
 
-  ON_CALL(*mock_db_, get_stored_groups()).WillByDefault(Return(groups));
-  ON_CALL(*mock_db_, get_stored_users()).WillByDefault(Return(std::vector<common::user>{}));
+  ON_CALL(*mock_db_impl_, get_stored_groups()).WillByDefault(Return(groups));
+  ON_CALL(*mock_db_impl_, get_stored_users()).WillByDefault(Return(std::vector<common::user>{}));
 
   tgbot::user_interaction ui;
   ui.user_login_tg = "test_user";
@@ -158,8 +163,8 @@ TEST_F(GroupHandlerTest, OnGroupListWithUsersInGroup) {
   group.user_ids = {"user1", "user2"};
   groups.push_back(group);
 
-  ON_CALL(*mock_db_, get_stored_groups()).WillByDefault(Return(groups));
-  ON_CALL(*mock_db_, get_stored_users()).WillByDefault(Return(users));
+  ON_CALL(*mock_db_impl_, get_stored_groups()).WillByDefault(Return(groups));
+  ON_CALL(*mock_db_impl_, get_stored_users()).WillByDefault(Return(users));
 
   tgbot::user_interaction ui;
   ui.user_login_tg = "test_user";
@@ -170,7 +175,7 @@ TEST_F(GroupHandlerTest, OnGroupListWithUsersInGroup) {
 }
 
 TEST_F(GroupHandlerTest, OnGroupCreateLongName) {
-  ON_CALL(*mock_db_, add_group(testing::_)).WillByDefault(Return(true));
+  ON_CALL(*mock_db_impl_, add_group(testing::_)).WillByDefault(Return(true));
 
   tgbot::user_interaction ui;
   ui.arguments[tgbot::user_interaction::key_group_name] = std::string(100, 'A');
@@ -188,8 +193,8 @@ TEST_F(GroupHandlerTest, OnGroupListEmptyUsers) {
   group.name = "EmptyGroup";
   groups.push_back(group);
 
-  ON_CALL(*mock_db_, get_stored_groups()).WillByDefault(Return(groups));
-  ON_CALL(*mock_db_, get_stored_users()).WillByDefault(Return(std::vector<common::user>{}));
+  ON_CALL(*mock_db_impl_, get_stored_groups()).WillByDefault(Return(groups));
+  ON_CALL(*mock_db_impl_, get_stored_users()).WillByDefault(Return(std::vector<common::user>{}));
 
   tgbot::user_interaction ui;
   ui.user_login_tg = "test_user";
@@ -200,7 +205,7 @@ TEST_F(GroupHandlerTest, OnGroupListEmptyUsers) {
 }
 
 TEST_F(GroupHandlerTest, OnGroupCreateAddGroupFailure) {
-  ON_CALL(*mock_db_, add_group(testing::_)).WillByDefault(Return(false));
+  ON_CALL(*mock_db_impl_, add_group(testing::_)).WillByDefault(Return(false));
 
   tgbot::user_interaction ui;
   ui.arguments[tgbot::user_interaction::key_group_name] = "NewTestGroup";

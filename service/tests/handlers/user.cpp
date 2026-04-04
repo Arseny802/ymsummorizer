@@ -1,5 +1,5 @@
 #include "handlers/user.h"
-#include "storage/mocs/db_manager.h"
+#include "../mocs/dbmoc.hpp"
 #include "tgbot/user_interaction.h"
 #include "tgbot/ymsummorizer_callback_result.h"
 #include <gtest/gtest.h>
@@ -13,16 +13,21 @@ class UserHandlerTest : public ::testing::Test {
  protected:
   void SetUp() override {
     log()->set_level(hare::hlevels::off);
-    mock_db_ = std::make_unique<storage::mocs::db_manager>(storage::storage_types::sqlite3, "test_db");
-    handler_ = std::make_unique<handlers::user>(*mock_db_);
+    mock_db_impl_ = std::make_shared<storage::db_manager_mock>();
+
+    auto impl = static_pointer_cast<storage::db::manager_base>(mock_db_impl_);
+    db_manager_ = std::make_unique<storage::db_manager>(impl);
+    handler_ = std::make_unique<handlers::user>(*db_manager_);
   }
 
   void TearDown() override {
     handler_.reset();
-    mock_db_.reset();
+    mock_db_impl_.reset();
+    db_manager_.reset();
   }
 
-  std::unique_ptr<storage::mocs::db_manager> mock_db_;
+  std::shared_ptr<storage::db_manager_mock> mock_db_impl_;
+  std::unique_ptr<storage::db_manager> db_manager_;
   std::unique_ptr<handlers::user> handler_;
 };
 
@@ -31,7 +36,7 @@ TEST_F(UserHandlerTest, Constructor) {
 }
 
 TEST_F(UserHandlerTest, OnStart) {
-  ON_CALL(*mock_db_, get_stored_users()).WillByDefault(Return(std::vector<common::user>{}));
+  ON_CALL(*mock_db_impl_, get_stored_users()).WillByDefault(Return(std::vector<common::user>{}));
 
   tgbot::user_interaction ui;
   ui.user_login_tg = "test_user";
@@ -51,7 +56,7 @@ TEST_F(UserHandlerTest, OnStartWithUser) {
   test_user.token = "test_token";
   users.push_back(test_user);
 
-  ON_CALL(*mock_db_, get_stored_users()).WillByDefault(Return(users));
+  ON_CALL(*mock_db_impl_, get_stored_users()).WillByDefault(Return(users));
 
   tgbot::user_interaction ui;
   ui.user_login_tg = "test_user";
@@ -92,7 +97,7 @@ TEST_F(UserHandlerTest, OnTokenEdit) {
 }
 
 TEST_F(UserHandlerTest, OnUserView) {
-  ON_CALL(*mock_db_, get_stored_users()).WillByDefault(Return(std::vector<common::user>{}));
+  ON_CALL(*mock_db_impl_, get_stored_users()).WillByDefault(Return(std::vector<common::user>{}));
 
   tgbot::user_interaction ui;
   ui.user_login_tg = "test_user";
@@ -112,7 +117,7 @@ TEST_F(UserHandlerTest, OnUserViewWithExistingUser) {
   test_user.token = "test_token";
   users.push_back(test_user);
 
-  ON_CALL(*mock_db_, get_stored_users()).WillByDefault(Return(users));
+  ON_CALL(*mock_db_impl_, get_stored_users()).WillByDefault(Return(users));
 
   tgbot::user_interaction ui;
   ui.user_login_tg = "test_user";
@@ -140,7 +145,7 @@ TEST_F(UserHandlerTest, OnUserTokenAddWithToken) {
 }
 
 TEST_F(UserHandlerTest, MultipleInteractions) {
-  ON_CALL(*mock_db_, get_stored_users()).WillByDefault(Return(std::vector<common::user>{}));
+  ON_CALL(*mock_db_impl_, get_stored_users()).WillByDefault(Return(std::vector<common::user>{}));
 
   tgbot::user_interaction ui;
   ui.user_login_tg = "test_user";
@@ -165,7 +170,7 @@ TEST_F(UserHandlerTest, OnUserViewWithAllFields) {
   test_user.token = "secret_token";
   users.push_back(test_user);
 
-  ON_CALL(*mock_db_, get_stored_users()).WillByDefault(Return(users));
+  ON_CALL(*mock_db_impl_, get_stored_users()).WillByDefault(Return(users));
 
   tgbot::user_interaction ui;
   ui.user_login_tg = "tg_login";
