@@ -72,15 +72,14 @@ function(setup_project_tests)
   add_test(NAME ${ARG_TARGET_NAME} COMMAND ${ARG_TARGET_NAME})
   message(STATUS "Configured test: ${ARG_TARGET_NAME}")
 
-  if (ENABLE_COVERAGE)
-    generate_coverage_report(NAME ${ARG_TARGET_NAME})
-  endif()
-
   if (RUN_TESTS)
     add_custom_command(
       TARGET ${ARG_TARGET_NAME}
       POST_BUILD
       COMMAND ctest -C $<CONFIGURATION> --output-on-failure)
+    if (ENABLE_COVERAGE)
+      generate_coverage_report(NAME ${ARG_TARGET_NAME})
+    endif()
   else()
     message(STATUS "Test run disabled - ${ARG_NAME} tests will not ve created and executed.")
   endif(RUN_TESTS)

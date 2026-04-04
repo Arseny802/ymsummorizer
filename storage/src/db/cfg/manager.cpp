@@ -5,6 +5,9 @@
 #include "manager.h"
 
 namespace ymsummorizer::storage::db::cfg {
+
+std::mutex manager::file_mutex_{};
+
 manager::manager() {
   AUTOTRACE;
 }
@@ -25,8 +28,14 @@ bool manager::connect(const std::string& cfg_file_name) {
     return true;
   }
 
-  std::ifstream ifs(cfg_file_name);
-  data_ = std::make_unique<nlohmann::json>(nlohmann::json::parse(ifs));
+  try {
+    std::lock_guard lock(file_mutex_);
+    std::ifstream ifs(cfg_file_name);
+    data_ = std::make_unique<nlohmann::json>(nlohmann::json::parse(ifs));
+  } catch (std::exception& e) {
+    log()->error("Failed read configuration from {}: {}", cfg_file_name, e.what());
+    return false;
+  }
 
   return true;
 }
@@ -53,9 +62,11 @@ bool manager::create_db() {
   }
   return false;
 }
+
 void manager::save_data() {
   AUTOTRACE
   assert(data_ && "Data is empty!");
+  std::lock_guard lock(file_mutex_);
 
   // write prettified JSON to another file
   std::ofstream result_cfg_file(cfg_file_path_);

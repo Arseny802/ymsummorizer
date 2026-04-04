@@ -57,8 +57,10 @@ function(generate_coverage_report)
     set(ARG_NAME "coverage")
   endif()
 
+  set(COVERAGE_TARGET ${ARG_NAME}.coverage)
+
   # Цель для генерации отчёта
-  add_custom_target(${ARG_NAME}_coverage
+  add_custom_target(${COVERAGE_TARGET}
     COMMAND ${CMAKE_COMMAND} -E remove_directory "${COVERAGE_OUTPUT_DIR}/${ARG_NAME}"
     COMMAND ${CMAKE_COMMAND} -E make_directory "${COVERAGE_OUTPUT_DIR}/${ARG_NAME}"
     
@@ -83,9 +85,9 @@ function(generate_coverage_report)
   )
 
   # Добавляем зависимость от выполнения тестов
-  add_dependencies(${ARG_NAME}_coverage test)
+  add_dependencies(${COVERAGE_TARGET} test)
 
-  message(STATUS "Настроена генерация отчёта о покрытии: ${ARG_NAME}_coverage")
+  message(STATUS "Настроена генерация отчёта о покрытии: ${COVERAGE_TARGET}")
 endfunction()
 
 # Функция для настройки покрытия для тестов
