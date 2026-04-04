@@ -44,8 +44,26 @@ function(add_target TARGET_NAME)
   message(DEBUG "${TARGET_NAME} project of tests has files: ${ARG_SOURCES}")
   if (ARG_EXECUTABLE)
     if (ADD_TESTS)
+      set(MAIN_SOURCE_FILE "")
+      foreach(src ${ARG_SOURCES})
+        get_filename_component(fname ${src} NAME)
+        if(fname STREQUAL "main.cpp" OR 
+           fname STREQUAL "main.cc" OR 
+           fname STREQUAL "main.c")
+            set(MAIN_SOURCE_FILE ${src})
+            break()
+        endif()
+      endforeach()
+      if(MAIN_SOURCE_FILE)
+        list(REMOVE_ITEM ARG_SOURCES ${MAIN_SOURCE_FILE})
+      else()
+        message(WARNING 
+          "Main source file NOT found for ${TARGET_NAME}. "
+          "May be conflict with testing main function.")
+      endif()
+
       add_library(${BUILD_TARGET_NAME} ${EXCLUDE_FROM_ALL} OBJECT ${ARG_SOURCES})
-      add_executable(${TARGET_NAME} ${EXCLUDE_FROM_ALL})
+      add_executable(${TARGET_NAME} ${EXCLUDE_FROM_ALL} ${MAIN_SOURCE_FILE})
       target_link_libraries(${TARGET_NAME} PUBLIC ${BUILD_TARGET_NAME})
     else()
       add_executable(${TARGET_NAME} ${EXCLUDE_FROM_ALL} ${ARG_SOURCES})
