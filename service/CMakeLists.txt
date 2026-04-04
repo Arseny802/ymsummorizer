@@ -1,33 +1,22 @@
 cmake_minimum_required(VERSION 3.23)
 project(ymsummorizer.service VERSION ${CMAKE_PROJECT_VERSION})
 
-add_executable(${PROJECT_NAME}
-  src/handlers/group_playlist.cpp
-  src/handlers/group_user.cpp
-  src/handlers/group.cpp
-  src/handlers/user.cpp
-  src/maintenance/task.cpp
-  src/bot_impl.cpp
-  src/main.cpp
-  src/pch.cpp
+add_target(${PROJECT_NAME} EXECUTABLE
+  SOURCES_PATH 
+    ${CMAKE_CURRENT_SOURCE_DIR}/src
+  PCH_PRIVATE
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/pch.h
+  USES_PUBLIC 
+    ymsummorizer.common
+    ymsummorizer.storage
+    ymsummorizer.tgbot
+    ymsummorizer.ymapi
+  TEST_SOURCES_PATH 
+    ${CMAKE_CURRENT_SOURCE_DIR}/tests
 )
-
-target_precompile_headers(${PROJECT_NAME}
-  PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/src/pch.h)
-
-target_link_libraries(${PROJECT_NAME} PUBLIC
-  ymsummorizer.common
-  ymsummorizer.storage
-  ymsummorizer.tgbot
-  ymsummorizer.ymapi
-)
-
-target_include_directories(${PROJECT_NAME}
-  PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/src")
 
 set_target_properties(${PROJECT_NAME} PROPERTIES
   CXX_STANDARD 20
   CXX_STANDARD_REQUIRED ON
   OUTPUT_NAME "ymsummorizer-${PROJECT_VERSION}" 
 )
-

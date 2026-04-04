@@ -7,7 +7,9 @@ compile_commands.json
 ymsummorizer.storage.json
 config.json
 
+# IDE files
 .[vV][sS][cC]ode*
+.idea
 CMakeLists.txt.user
 
 # AI files
