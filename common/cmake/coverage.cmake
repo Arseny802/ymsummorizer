@@ -3,6 +3,8 @@
 # include(common_coverage)
 # enable_coverage()
 
+include_guard(GLOBAL)
+
 
 # Опция для включения покрытия
 option(ENABLE_COVERAGE "Enable code coverage reporting" OFF)

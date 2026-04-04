@@ -5,7 +5,7 @@
 #   NAME test_project_name
 #   SOURCES test1.cpp test2.cpp
 # )
-
+include_guard(GLOBAL)
 
 if (NOT BUILD_TESTS)
   function(setup_project_tests)
@@ -16,19 +16,20 @@ endif(NOT BUILD_TESTS)
 
 include(CTest)
 
-# Найти пакет GTest
 find_package(GTest REQUIRED)
 
 function(setup_project_tests)
   set(options)
-  set(oneValueArgs NAME)
-  set(oneValueArgs SOURCES_PATH)
-  set(multiValueArgs SOURCES)
+  set(oneValueArgs TESTING_TARGET TARGET_NAME SOURCES_PATH)
+  set(multiValueArgs SOURCES USES INCLUDES COMPILE_DEFINITIONS)
   cmake_parse_arguments(ARG "${options}" "${oneValueArgs}" "${multiValueArgs}" ${ARGN})
+  if (NOT ARG_TESTING_TARGET)
+    set(ARG_TESTING_TARGET ${PROJECT_NAME})
+    #message(ERROR "TESTING_TARGET argument needed for setup_project_tests")
+  endif(NOT ARG_TESTING_TARGET)
 
-  # Если имя не передано, использовать PROJECT_NAME.test
-  if(NOT ARG_NAME)
-    set(ARG_NAME ${PROJECT_NAME}.test)
+  if(NOT ARG_TARGET_NAME)
+    set(ARG_TARGET_NAME ${ARG_TESTING_TARGET}.test)
   endif()
 
   if(NOT ARG_SOURCES)
@@ -38,32 +39,30 @@ function(setup_project_tests)
     file(GLOB_RECURSE ARG_SOURCES "${ARG_SOURCES_PATH}/*.cpp")
   endif()
 
-  message(DEBUG "${ARG_NAME} project of tests has files: ${ARG_SOURCES}")
+  message(DEBUG "${ARG_TARGET_NAME} project of tests has files: ${ARG_SOURCES}")
 
-  # Создать исполняемый файл тестов
-  add_executable(${ARG_NAME} ${ARG_SOURCES})
-
-  # Связать с библиотекой common и GTest
-  target_link_libraries(${ARG_NAME} PRIVATE
-    ${PROJECT_NAME}
+  add_executable(${ARG_TARGET_NAME} ${ARG_SOURCES})
+  target_link_libraries(${ARG_TARGET_NAME} PRIVATE
+    ${ARG_TESTING_TARGET}
+    ${ARG_USES}
     GTest::gmock_main
   )
 
-  # Установить стандарт C++20
-  set_target_properties(${ARG_NAME} PROPERTIES
+  set_target_properties(${ARG_TARGET_NAME} PROPERTIES
     CXX_STANDARD 20
     CXX_STANDARD_REQUIRED ON
   )
 
-  target_compile_definitions(${ARG_NAME} PRIVATE UNIT_TEST)
+  target_compile_definitions(${ARG_TARGET_NAME} PRIVATE UNIT_TEST)
+  target_include_directories(${ARG_TARGET_NAME} PRIVATE ${ARG_INCLUDES} ${ARG_SOURCES_PATH})
 
   # Регистрация теста в CTest
-  add_test(NAME ${ARG_NAME} COMMAND ${ARG_NAME})
-  message(STATUS "Configured test: ${ARG_NAME}")
+  add_test(NAME ${ARG_TARGET_NAME} COMMAND ${ARG_TARGET_NAME})
+  message(STATUS "Configured test: ${ARG_TARGET_NAME}")
 
   if (RUN_TESTS)
     add_custom_command(
-      TARGET ${ARG_NAME}
+      TARGET ${ARG_TARGET_NAME}
       POST_BUILD
       COMMAND ctest -C $<CONFIGURATION> --output-on-failure)
   else()
