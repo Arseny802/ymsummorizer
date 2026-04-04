@@ -11,6 +11,6 @@ struct user {
   std::string token;
 
   std::string format() const;
-  static std::string hide_spetial_chars(const std::string& str) noexcept;
+  static std::string hide_special_chars(const std::string& str) noexcept;
 };
 }  // namespace ymsummorizer::common

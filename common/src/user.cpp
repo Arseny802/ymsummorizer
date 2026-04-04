@@ -10,7 +10,7 @@ std::string user::format() const {
   return id + " " + name + " " + login_tg + " " + login_yandex;
 }
 
-std::string user::hide_spetial_chars(const std::string& str) noexcept {
+std::string user::hide_special_chars(const std::string& str) noexcept {
   std::string result;
   result.reserve(str.size() * 2);
   const std::unordered_set special_chars = {'_'};
