@@ -5,10 +5,6 @@
 
 include_guard(GLOBAL)
 
-
-# Опция для включения покрытия
-option(ENABLE_COVERAGE "Enable code coverage reporting" OFF)
-
 if(NOT ENABLE_COVERAGE)
   return()
 endif()
@@ -46,10 +42,7 @@ if(NOT GENHTML_PATH)
   message(WARNING "genhtml не найден! Генерация HTML отчётов будет недоступна.")
 endif()
 
-# Целевая директория для отчётов
 set(COVERAGE_OUTPUT_DIR ${CMAKE_BINARY_DIR}/coverage)
-
-# Создаём директорию для отчётов
 file(MAKE_DIRECTORY ${COVERAGE_OUTPUT_DIR})
 
 # Функция для генерации отчёта о покрытии

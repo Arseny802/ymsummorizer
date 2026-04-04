@@ -2,6 +2,8 @@ cmake_minimum_required(VERSION 3.23)
 project(ymsummorizer.service VERSION ${CMAKE_PROJECT_VERSION})
 
 add_target(${PROJECT_NAME} EXECUTABLE
+  INCLUDE_PATH
+    ${CMAKE_CURRENT_SOURCE_DIR}/include
   SOURCES_PATH 
     ${CMAKE_CURRENT_SOURCE_DIR}/src
   PCH_PRIVATE

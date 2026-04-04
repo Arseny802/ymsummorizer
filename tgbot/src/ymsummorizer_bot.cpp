@@ -2,6 +2,7 @@
 
 #include "bot_impl.h"
 #include "tgbot/ymsummorizer_bot.h"
+#include <cassert>
 
 namespace ymsummorizer::tgbot {
 
@@ -12,7 +13,7 @@ ymsummorizer_bot::ymsummorizer_bot(storage::db_manager& db) {
 
   auto bot_info = db.get_bot_info();
   if (!bot_info.has_value()) {
-    log()->error("Failed to get bot info");
+    log()->fatal("Failed to get bot info");
     return;
   }
 
@@ -48,14 +49,16 @@ bool ymsummorizer_bot::stop() {
 }
 
 bool ymsummorizer_bot::send_message(const std::string& chat_id, const std::string& text) {
-  AUTOTRACE
+  AUTOTRACE;
+  assert(bot_ && "Bot is not initialized!");
   return bot_->send_message(chat_id, text);
 }
 
 void ymsummorizer_bot::set_callback_command(
     command_type ct,
     std::function<ymsummorizer_callback_result::ptr(const user_interaction&)>&& callback) {
-  AUTOTRACE
+  AUTOTRACE;
+  assert(bot_ && "Bot is not initialized!");
   bot_->set_callback_command(ct, std::move(callback));
 }
 }  // namespace ymsummorizer::tgbot

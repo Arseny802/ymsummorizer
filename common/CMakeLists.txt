@@ -4,44 +4,23 @@ project(ymsummorizer.common VERSION ${CMAKE_PROJECT_VERSION})
 find_package(magic_enum REQUIRED)
 find_package(Boost REQUIRED)
 
-add_library(${PROJECT_NAME} STATIC
-  src/group.cpp
-  src/playlist.cpp
-  src/playlist_track.cpp
-  src/setting.cpp
-  src/user.cpp
-  src/pch.cpp
-)
-
-target_precompile_headers(${PROJECT_NAME}
-  PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include/common/common_pch.h
-  PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/src/pch.h
-)
-
-target_link_libraries(${PROJECT_NAME} PUBLIC
-  hare
-  magic_enum::magic_enum
-  Boost::boost
-  $<$<PLATFORM_ID:Windows>:ws2_32>
-  $<$<PLATFORM_ID:Windows>:wsock32>
-)
-
-target_include_directories(${PROJECT_NAME}
-  PUBLIC
-    "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>"
-    "$<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}/include>"
-    "$<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>"
-  PRIVATE
-    "${CMAKE_CURRENT_SOURCE_DIR}/src"
-)
-
-set_target_properties(${PROJECT_NAME} PROPERTIES
-  CXX_STANDARD 20
-  CXX_STANDARD_REQUIRED ON
-)
-
-setup_project_tests(
-  SOURCES_PATH ${CMAKE_CURRENT_SOURCE_DIR}/tests
+add_target(${PROJECT_NAME} STATIC
+  INCLUDE_PATH
+    ${CMAKE_CURRENT_SOURCE_DIR}/include
+  SOURCES_PATH 
+    ${CMAKE_CURRENT_SOURCE_DIR}/src
+  PCH_PUBLIC
+    ${CMAKE_CURRENT_SOURCE_DIR}/include/common/common_pch.h
+  PCH_PRIVATE
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/pch.h
+  USES_PUBLIC 
+    hare
+    magic_enum::magic_enum
+    Boost::boost
+    $<$<PLATFORM_ID:Windows>:ws2_32>
+    $<$<PLATFORM_ID:Windows>:wsock32>
+  TEST_SOURCES_PATH 
+    ${CMAKE_CURRENT_SOURCE_DIR}/tests
 )
 
 configure_file(version.h.in 

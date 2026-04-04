@@ -40,11 +40,15 @@ function(setup_project_tests)
     set(ARG_TARGET_NAME ${ARG_TESTING_TARGET}.test)
   endif()
 
+  if(ARG_SOURCES_PATH)
+    file(GLOB_RECURSE ARG_SOURCES_SEARCH_CPP "${ARG_SOURCES_PATH}/*.cpp")
+    file(GLOB_RECURSE ARG_SOURCES_SEARCH_CC "${ARG_SOURCES_PATH}/*.cc")
+    file(GLOB_RECURSE ARG_SOURCES_SEARCH_C "${ARG_SOURCES_PATH}/*.c")
+    set(ARG_SOURCES ${ARG_SOURCES} ${ARG_SOURCES_SEARCH_CPP} ${ARG_SOURCES_SEARCH_CC} ${ARG_SOURCES_SEARCH_C})
+  endif()
+
   if(NOT ARG_SOURCES)
-    if(NOT ARG_SOURCES_PATH)
-      message(FATAL_ERROR "SOURCES or SOURCES_PATH argument is required for setup_project_tests")
-    endif()
-    file(GLOB_RECURSE ARG_SOURCES "${ARG_SOURCES_PATH}/*.cpp")
+    message(FATAL_ERROR "SOURCES or SOURCES_PATH argument is required for setup_project_tests")
   endif()
 
   message(DEBUG "${ARG_TARGET_NAME} project of tests has files: ${ARG_SOURCES}")
@@ -67,6 +71,10 @@ function(setup_project_tests)
   # Регистрация теста в CTest
   add_test(NAME ${ARG_TARGET_NAME} COMMAND ${ARG_TARGET_NAME})
   message(STATUS "Configured test: ${ARG_TARGET_NAME}")
+
+  if (ENABLE_COVERAGE)
+    generate_coverage_report(NAME ${ARG_TARGET_NAME})
+  endif()
 
   if (RUN_TESTS)
     add_custom_command(

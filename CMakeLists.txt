@@ -4,6 +4,7 @@ project(ymsummorizer VERSION 0.0.1)
 option(BUILD_TESTS "Build project tests" ON)
 option(RUN_TESTS "Run project tests" ON)
 option(ENABLE_COVERAGE "Enable code coverage reporting" ON)
+option(BUILD_EXAMPLES "Build project examples" ON)
 
 include(common/common.cmake)
 
