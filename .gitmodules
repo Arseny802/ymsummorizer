@@ -4,3 +4,6 @@
 [submodule "deps/cmrc"]
 	path = deps/cmrc
 	url = https://github.com/vector-of-bool/cmrc.git
+[submodule "deps/cmake_tools"]
+	path = deps/cmake_tools
+	url = https://github.com/Arseny802/cmake_tools
