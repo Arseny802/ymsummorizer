@@ -9,8 +9,6 @@ add_target(${PROJECT_NAME} STATIC
     ${CMAKE_CURRENT_SOURCE_DIR}/include
   SOURCES_PATH 
     ${CMAKE_CURRENT_SOURCE_DIR}/src
-  PCH_PUBLIC
-    ${CMAKE_CURRENT_SOURCE_DIR}/include/common/common_pch.h
   PCH_PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}/src/pch.h
   USES_PUBLIC 

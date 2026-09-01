@@ -1,7 +1,7 @@
 #pragma once
 
 // Standard libraries
-#include "common/common_pch.h"
+#include <gpch.h>
 
 // Local files
 
